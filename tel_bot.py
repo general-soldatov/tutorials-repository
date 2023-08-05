@@ -1,31 +1,18 @@
-import telebot
-from telebot import types
+from telegram import Update        # пакет называется python-telegram-bot, но Python-
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes  # модуль почему-то просто telegram ¯\_(ツ)_/¯
 
-bot = telebot.TeleBot('6195922408:AAFCID4v6-a6gKccR6Xj5jt6Vz4IKf3S6qE')
+import logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="Здравствуйте.")
 
-@bot.message_handler(comand = ['start'])
-def start(message):
+updater = ApplicationBuilder().token('6195922408:AAFCID4v6-a6gKccR6Xj5jt6Vz4IKf3S6qE').build()  # тут токен, который выдал вам Ботский Отец!
 
-    markup = types.ReplyKeyboardMarkup(relize_keybard=True)
-    btn1 = types.KeyboardButton("Поздороваться")
-    markup.add(btn1)
-    bot.send_message(message.from_user.id, "Привет! Я твой бот-помощник!", reply_markup=markup)
+start_handler = CommandHandler('start', start)  # этот обработчик реагирует
+                                                # только на команду /start
 
-@bot.message_handler(comands=['text'])
-def get_text_messages(massage):
-    if message.text == 'Поздороваться':
-        markup = types.ReplyKeyboardMarkup(relize_keyboard=True)
-        btn1 = types.KeyboardButton('Расскажи о себе')
-        btn2 = types.KeyboardButton('Написать определение')
-        btn3 = types.KeyboardButton('Узнать вариант')
-        markup.add(btn1, btn2, btn3)
-        bot.send_message(message.from_user.id, 'Задайте интересующий вопрос', reply_markup=markup)
-
-
-    elif message.text == 'Расскажи о себе':
-        bot.send_message(message.from_user.id, 'Я пришёл издалека, чтобы научить тебя хорошему.\n \nЯ вышивать люблю и на машинке тоже... А создал меня ' + '[он](https://vk.com/general_soldatov)', parse_mode='Markdown')
-        
-        
-
-
-bot.polling(none_stop=True, interval=0)    
+updater.add_handler(start_handler)   # регистрируем в госреестре обработчиков
+updater.run_polling()  # поехали!
