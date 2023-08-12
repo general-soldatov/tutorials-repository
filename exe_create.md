@@ -1,2 +1,3 @@
+**Создание файла exe из PyCharm
 
-pip install pyinstaller
+``pip install pyinstaller
