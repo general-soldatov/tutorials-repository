@@ -21,4 +21,12 @@ bot = telebot.TeleBot('token')
 def send_welcome(message):
 	bot.reply_to(message, "Howdy, how are you doing?")
 ```
-Функция `bot.reply_to(message, "Ответ на сообщение")` реализует ответ на сообщение, установленное обработчиком `@bot.message_handler(commands=['start', 'help'])`.
+Функция `bot.reply_to(message, "Ответ на сообщение")` реализует ответ на сообщение, захваченное обработчиком `@bot.message_handler(commands=['start', 'help'])`.  
+Для захвата обработчиком сообщения, содержащего текст, в параметрах обработчика нужно указать `content_types=["text"]`. Тип сообщения может быть следующим `text, audio, document, photo, sticker, video, video_note, voice, location, contact, new_chat_members, left_chat_member, new_chat_title, new_chat_photo, delete_chat_photo, group_chat_created, supergroup_chat_created, channel_chat_created, migrate_to_chat_id, migrate_from_chat_id, pinned_message, web_app_data`.  
+Для создания эхо-бота, необходимо включить такую функцию:
+```python
+@bot.message_handler(content_types=["text"])
+def echo_all(message):
+	bot.send_message(message.chat.id, message.text)
+```
+Здесь уже мы видим функцию `send_message`, которая не отвечает, а просто отправляет сообщение. В параметрах функции мы видим аргумент `message.chat.id`, которая обрабатывает сообщение от конкретного пользователя. Аргумент `message.text` переводит сообщение в строку `string`. 
