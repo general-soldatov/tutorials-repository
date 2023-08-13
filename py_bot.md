@@ -62,4 +62,35 @@ with connect(
         print(connection)
 ```
 Здесь указываем хост, на котором находится БД, имя пользователя, пароль и саму БД. Управление БД можно осуществлять через консоль на языке SQL, что очень удобно для работы с любого устройства.  
+Вначале через консоль мы создаём таблицу, назовём её `teldata` с помощью функции:
+```SQL
+CREATE TABLE teldata(
+    ->         id INT AUTO_INCREMENT PRIMARY KEY,
+    ->         user_id INT NOT NULL,
+    ->         active INT DEFAULT 0);
+```
+В полученной таблице есть три столбца: `id`, `user_id`, `active`. Теперь мы можем добавлять значения в таблицу. Для этого пропишем функцию добавления строки:
+```python
+def user_sql(user_id):
+    with connect(
+        host="GeneralSoldatov.mysql.pythonanywhere-services.com",
+        user='GeneralSoldatov',
+        password='pass',
+        database='GeneralSoldatov$ter_mex_sql',
+    ) as connection:
+        print(connection)
 
+        show_db_query = "INSERT INTO teldata (user_id, active) VALUES (%s, %s)"
+        data_tg = [(user_id, 1)]
+        with connection.cursor() as cursor:
+            cursor.executemany(show_db_query, data_tg)
+            connection.commit()
+            print("id append")
+```
+Представленная функция добавляет строку в таблицу с номером id. Поэтому логичнее выполнить её при обработке команды `start`.
+```python
+@bot.message_handler(commands=['start'])
+def send_welcome(message): #функция на команды
+	bot.reply_to(message, "Что Вам угодно?")
+	user_sql(message.from_user.id)
+```
