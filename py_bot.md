@@ -21,3 +21,4 @@ bot = telebot.TeleBot('token')
 def send_welcome(message):
 	bot.reply_to(message, "Howdy, how are you doing?")
 ```
+Функция `bot.reply_to(message, "Ответ на сообщение")` реализует ответ на сообщение, установленное обработчиком `@bot.message_handler(commands=['start', 'help'])`.
