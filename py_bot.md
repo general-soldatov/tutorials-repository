@@ -30,3 +30,23 @@ def echo_all(message):
 	bot.send_message(message.chat.id, message.text)
 ```
 Здесь уже мы видим функцию `send_message`, которая не отвечает, а просто отправляет сообщение. В параметрах функции мы видим аргумент `message.chat.id`, которая обрабатывает сообщение от конкретного пользователя. Аргумент `message.text` переводит сообщение в строку `string`. 
+В конце кода обязательно нужно указываеть функцию, которая постоянно обращается к серверу телеграм
+```python
+bot.infinity_polling()
+```
+В конце получаем код каркаса телеграм-бота, который отвечает на команды `run` и `help` и пересылает сообщения пользователя (эхо-бот): 
+```python
+import telebot
+
+bot = telebot.TeleBot("YOUR_BOT_TOKEN")
+
+@bot.message_handler(commands=['start', 'help'])
+def send_welcome(message):
+	bot.reply_to(message, "Howdy, how are you doing?")
+
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+	bot.reply_to(message, message.text)
+
+bot.infinity_polling()
+```
