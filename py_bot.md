@@ -50,7 +50,7 @@ def echo_all(message):
 
 bot.infinity_polling()
 ```
-# Работа с базой данных
+# Работа с базой данных и рассылка сообщений
 Для того, чтобы вести статистику по пользователям, которые используют чат-бот, необходимо подключение базы данных SQL. PythonAnywhere поддерживает возможность создание облачной базы данных и её управление через консоль. После регистрации базы на сервере, мы прописываем процедуру инициализации базы:
 ```python
 with connect(
@@ -94,3 +94,29 @@ def send_welcome(message): #функция на команды
 	bot.reply_to(message, "Что Вам угодно?")
 	user_sql(message.from_user.id)
 ```
+Реализовать переборку массива `user_id` можно посредством описания процедуры:
+```python
+def user_select(text):
+    with connect(
+        host="GeneralSoldatov.mysql.pythonanywhere-services.com",
+        user='GeneralSoldatov',
+        password='pass',
+        database='GeneralSoldatov$ter_mex_sql',
+    ) as connection:
+        print(connection)
+
+        show_select = "SELECT user_id FROM teldata"
+        with connection.cursor() as cursor:
+            cursor.execute(show_select)
+            for result in cursor.fetchall():
+                bot.send_message(result[0], text)
+```
+Затем мы пропишем в обработчике сообщений команду `/sendall`, которая будет делать рассылку сообщений по пользователям через аккаунт админа.
+```python
+@bot.message_handler(commands=['sendall'])
+def sendall(message):
+    if message.from_user.id == 980314213:
+        text = message.text[9:]
+        user_select(text)
+```
+В результате аккаунты, подписанные на бота, будут получать сообщения от админа.
