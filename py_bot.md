@@ -53,6 +53,8 @@ bot.infinity_polling()
 # Работа с базой данных и рассылка сообщений
 Для того, чтобы вести статистику по пользователям, которые используют чат-бот, необходимо подключение базы данных SQL. PythonAnywhere поддерживает возможность создание облачной базы данных и её управление через консоль. После регистрации базы на сервере, мы прописываем процедуру инициализации базы:
 ```python
+from mysql.connector import connect
+
 with connect(
         host="GeneralSoldatov.mysql.pythonanywhere-services.com",
         user='GeneralSoldatov',
