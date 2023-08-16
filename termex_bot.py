@@ -21,10 +21,10 @@ def user_sql(user_id): #регистрация пользователя в сп�
 
 def user_select(message):  # подпрограмма рассылки пользователям сообщений
     with connect(
-        host="GeneralSoldatov.mysql.pythonanywhere-services.com",
-        user='GeneralSoldatov',
-        password='47$FGf_bbvabf3A',
-        database='GeneralSoldatov$ter_mex_sql',
+        host="bass.mysql.pythonanywhere-services.com",
+        user='BassTer',
+        password='pass,
+        database='BaassTer$ter_mex_sql',
     ) as connection:
         print(connection)
 
@@ -36,10 +36,10 @@ def user_select(message):  # подпрограмма рассылки поль�
 
 def user_sql_reg(user_id, username, group, surname, name, aftername, study): #регистрация студента в базе данных
     with connect(
-        host="GeneralSoldatov.mysql.pythonanywhere-services.com",
-        user='GeneralSoldatov',
-        password='47$FGf_bbvabf3A',
-        database='GeneralSoldatov$ter_mex_sql',
+        host="bass.mysql.pythonanywhere-services.com",
+        user='BassTer',
+        password='pass,
+        database='BaassTer$ter_mex_sql',	
     ) as connection:
         print(connection)
 
