@@ -82,7 +82,7 @@ button1 = types.InlineKeyboardButton("Актуальные варианты",
 markup_inl.add(button1)
 bot.send_message(message.chat.id, 'Свой вариант можно найти в файле', reply_markup=markup_inl)
 ```
-Здесь из класса `types` мы вызываем объект `InlineKeyboardMarkup()`, и добавляем кнопки методом `.add()`. В параметрах отправки сообщения `reply_markup` присваиваем `reply_markup=markup_inl`.
+Здесь из класса `types` мы вызываем объект `InlineKeyboardMarkup()`, и добавляем кнопки методом `.add()`. В параметрах отправки сообщения `reply_markup` присваиваем `reply_markup=markup_inl`. Более подробно создание кнопок описано по [ссылке](https://habr.com/ru/sandbox/163347/).
 # Функция обработки сообщений
 Для обработки сообщений, содержащих текст, вызовем обработчик: `@bot.message_handler(content_types = ["text"])`.  
 Фильтрация текста осуществляется с помощью конструкции `if() - elif() - else()`. В случае если полученный текст совпадает с условием, выполняется процедура. В случае несовпадения текста с предложенными конструкциями, то выводим в `else` сообщение об ошибке. 
@@ -216,4 +216,15 @@ def mailling(message):
     user_select(message)
 ```
 
-В результате аккаунты, подписанные на бота, будут получать сообщения от админа. Полезно почитать ресурс в [дзене](https://dzen.ru/a/Yd7T967Tu0a8Kgq9)
+В результате аккаунты, подписанные на бота, будут получать сообщения от админа. Полезно почитать ресурс в [дзене](https://dzen.ru/a/Yd7T967Tu0a8Kgq9)  
+# Полезные ссылки
+* Работа с базами данных SQL описана в [статье](https://proglib.io/p/python-i-mysql-prakticheskoe-vvedenie-2021-01-06)
+* [Всё, о чём должен знать разработчик Телеграм-ботов](https://habr.com/ru/articles/543676/)
+* [О библиотеке PyTelegramBotAPI и использовании SQL](https://habr.com/ru/articles/347106/)
+* [Подключаем Sqlite3 к Telegram боту](https://habr.com/ru/articles/552788/)
+* [О построении цепочки ответов и ответы на разные типы контента](https://habr.com/ru/articles/350648/)
+* [Добавление кнопок](https://surik00.gitbooks.io/aiogram-lessons/content/chapter5.html)
+# Построение бота не в библиотеке PyTelegramBotAPI
+* [Пишем диалоговые Telegram-боты на Питоне](https://habr.com/ru/articles/316666/)
+* [Инструкция: Как создавать ботов в Telegram](https://habr.com/ru/articles/262247/)
+* [Расширения на Ваш первый бот](https://github.com/python-telegram-bot/python-telegram-bot/wiki/Extensions---Your-first-Bot)
