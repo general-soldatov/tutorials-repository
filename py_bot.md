@@ -69,10 +69,63 @@ app5 = types.KeyboardButton("📆 Расписание преподавател�
 markup.add(app3, app4, app1, app2, app5)
 bot.send_message(message.chat.id, "Приятно познакомиться! Теперь ты можешь пользоваться кнопками на телеграм-клавиатуре.", reply_markup=markup)
 ```
-В этой части кода мы прописываем название кнопок, добавляем их методом `.add()`, после чего присылаем сообщение, где прописываем параметр `reply_markup=markup`.  
-Для того, чтобы удалить клавиатуру, можно воспользоваться методом `ReplyKeyboardRemove()`.
+В этой части кода мы прописываем название кнопок, добавляем их с помощью метода `.add()`, после чего присылаем сообщение, где прописываем параметр `reply_markup=markup`.  
+Для того, чтобы удалить клавиатуру, можно воспользоваться объекта `ReplyKeyboardRemove()`.
 ```python
 bot.send_message(message.chat.id, 'Удаление ⚙️', reply_markup=types.ReplyKeyboardRemove())
+```
+Для добавления Inline кнопок вместе с рабочей ссылкой, пропишем такую процедуру:
+```python
+markup_inl = types.InlineKeyboardMarkup()
+button1 = types.InlineKeyboardButton("Актуальные варианты", 					 
+   			url='https://drive.google.com/file/d/17FIeGJSOMbaHVG1sxeFEaxKIovgdftIJ/view?usp=sharing')
+markup_inl.add(button1)
+bot.send_message(message.chat.id, 'Свой вариант можно найти в файле', reply_markup=markup_inl)
+```
+Здесь из класса `types` мы вызываем объект `InlineKeyboardMarkup()`, и добавляем кнопки методом `.add()`. В параметрах отправки сообщения `reply_markup` присваиваем `reply_markup=markup_inl`.
+# Функция обработки сообщений
+Для обработки сообщений, содержащих текст, вызовем обработчик: `@bot.message_handler(content_types = ["text"])`.  
+Фильтрация текста осуществляется с помощью конструкции `python if(): elif: else:`
+```python
+@bot.message_handler(content_types = ["text"]) #обработчик текстовых сообщений пользователя
+def echo(message): #функция ответа на сообщения
+    string = message.text
+    markup_inl = types.InlineKeyboardMarkup()
+    if string == "🔑 Вариант":
+        button1 = types.InlineKeyboardButton("Актуальные варианты", url='https://drive.google.com/file/d/17FIeGJSOMbaHVG1sxeFEaxKIovgdftIJ/view?usp=sharing')
+        markup_inl.add(button1)
+        bot.send_message(message.chat.id, 'Свой вариант можно найти в файле', reply_markup=markup_inl)
+
+    elif string == "📈 Топ":
+        button1 = types.InlineKeyboardButton("Рейтинг студентов", url='https://drive.google.com/file/d/17H105tExHL_ZZjmNGhy5yhqfOBsexuvv/view?usp=sharing')
+        markup_inl.add(button1)
+        bot.send_message(message.chat.id, 'Рейтинг студентов в файле по ссылке:', reply_markup=markup_inl)
+
+    elif string == "📒 Методички":
+        button1 = types.InlineKeyboardButton("Статика", url='https://drive.google.com/file/d/172EuTxLjZlYR0GYi03wdbzu70kae4RdC/view?usp=sharing')
+        button2 = types.InlineKeyboardButton("Кинематика", url='https://drive.google.com/file/d/1i23gh8Kcsu-R5OkyHfdbp7SFUW2c73kx/view?usp=sharing')
+        button3 = types.InlineKeyboardButton("Динамика", url='https://drive.google.com/file/d/1wrluEFNR18gYT1wFe-oLsmar9pxSB8ZH/view?usp=sharing')
+        markup_inl.add(button1, button2, button3)
+        bot.send_message(message.chat.id, 'Ссылки на методические указания:', reply_markup=markup_inl)
+
+    elif string == "📖 Учебник":
+        button1 = types.InlineKeyboardButton("Учебник", url='https://drive.google.com/file/d/17OhsVDAaPVkdBEMbjl3wR0Scj7WjeMYo/view?usp=drive_link')
+        markup_inl.add(button1)
+        bot.send_message(message.chat.id, 'Ссылка на учебник: "Краткий курс теоретической механики"', reply_markup=markup_inl)
+
+    elif string == "📆 Расписание преподавателя":
+        button1 = types.InlineKeyboardButton("Расписание", url='https://drive.google.com/file/d/17JUNCEKttgoa4HwPY63l0RB3CGJITdyU/view?usp=sharing')
+        markup_inl.add(button1)
+        bot.send_message(message.chat.id, 'Расписание преподователя можете найти по ссылке ниже', reply_markup=markup_inl)
+
+    elif string == "📞 Контакты преподавателя":
+        button1 = types.InlineKeyboardButton("Telegram", url='https://t.me/general_soldatov')
+        button2 = types.InlineKeyboardButton("ВК", url='https://vk.com/general_soldatov')
+        markup_inl.add(button1, button2)
+        bot.send_message(message.chat.id, 'Расписание преподователя можете найти по ссылке ниже', reply_markup=markup_inl)
+
+    else:
+        bot.send_message(message.chat.id, 'Пока что я вас не понимаю... 🤷‍♂')
 ```
 
 # Работа с базой данных и рассылка сообщений
@@ -138,12 +191,29 @@ def user_select(text):
             for result in cursor.fetchall():
                 bot.send_message(result[0], text)
 ```
+Для того, чтобы сделать рассылку копии сообщения, можем прописать в цикле такую процедуру:
+```python
+bot.copy_message(chat_id = result, from_chat_id=message.chat.id, message_id=message.message_id)
+```
 Затем мы пропишем в обработчике сообщений команду `/sendall`, которая будет делать рассылку сообщений по пользователям через аккаунт админа.
 ```python
 @bot.message_handler(commands=['sendall'])
 def sendall(message):
-    if message.from_user.id == 980314213:
+    if message.from_user.id == "номер id":
         text = message.text[9:]
         user_select(text)
 ```
+В случае рассылки копии сообщения, команду `/sendall` указывать не стоит в сообщении, поэтому построим простую цепочку ответов:
+```python
+@bot.message_handler(commands=['sendall'])  #команда рассылки сообщения пользователям
+def sendall(message):
+    if message.from_user.id == 980314213:
+        msg = bot.send_message(message.chat.id, "Напиши сообщение для рассылки!")
+        bot.register_next_step_handler(msg, mailling)
+
+
+def mailling(message):
+    user_select(message)
+```
+
 В результате аккаунты, подписанные на бота, будут получать сообщения от админа. Полезно почитать ресурс в [дзене](https://dzen.ru/a/Yd7T967Tu0a8Kgq9)
