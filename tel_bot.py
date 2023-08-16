@@ -9,10 +9,14 @@ logging.basicConfig(
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Здравствуйте.")
 
+async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="До свидания.")
+
 updater = ApplicationBuilder().token('6195922408:AAFCID4v6-a6gKccR6Xj5jt6Vz4IKf3S6qE').build()  # тут токен, который выдал вам Ботский Отец!
 
 start_handler = CommandHandler('start', start)  # этот обработчик реагирует
-                                                # только на команду /start
+stop_handler = CommandHandler('end', stop)
 
 updater.add_handler(start_handler)   # регистрируем в госреестре обработчиков
+updater.add_handler(stop_handler)
 updater.run_polling()  # поехали!
