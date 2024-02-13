@@ -228,3 +228,4 @@ def mailling(message):
 * [Пишем диалоговые Telegram-боты на Питоне](https://habr.com/ru/articles/316666/)
 * [Инструкция: Как создавать ботов в Telegram](https://habr.com/ru/articles/262247/)
 * [Расширения на Ваш первый бот](https://github.com/python-telegram-bot/python-telegram-bot/wiki/Extensions---Your-first-Bot)
+* [Использование фреймворка Aiogram 3.0](https://mastergroosha.github.io/aiogram-3-guide/)
