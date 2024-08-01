@@ -51,3 +51,5 @@ yc iam access-key create --service-account-name <name_account>
 AWS_ACCESS_KEY_ID='< access_key.key_id >'
 AWS_SECRET_ACCESS_KEY='< secret >'
 ```
+## Управление базой данных
+Основные операции управления базой данных описаны в классе файла `ydb_manage.py` с аннотациями.
