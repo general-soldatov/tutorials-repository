@@ -159,7 +159,7 @@ def help(message):
 
 @bot.message_handler(commands=['sendall'])  #команда рассылки сообщения пользователям
 def sendall(message):
-    if message.from_user.id == 980314213:
+    if message.from_user.id == 'admin':
         msg = bot.send_message(message.chat.id, "Напиши сообщение для рассылки!")
         bot.register_next_step_handler(msg, mailling)
 
@@ -207,9 +207,6 @@ def echo(message): #функция ответа на сообщения
     else:
         bot.send_message(message.chat.id, 'Пока что я вас не понимаю... 🤷‍♂')
 
-
-
-#980314213 мой id
 
 #Постоянно обращается к серверу телеграм
 bot.infinity_polling()
