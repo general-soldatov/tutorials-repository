@@ -1,4 +1,5 @@
 # YandexDataBases
+## Методы
 Для работы с таблицами в Document API поддерживаются следующие методы:  
 CreateTable — создаёт таблицу.  
 DeleteTable — удаляет таблицу.  
@@ -17,3 +18,9 @@ Scan — возвращает элементы и атрибуты из табл
 TransactGetItems — извлекает несколько элементов из таблиц.  
 TransactWriteItems — синхронная операция записи.  
 UpdateItem — обновляет элементы в таблице.  
+## Настройка сервисного аккаунта
+```bash
+yc iam service-account create \
+  --name service-account-for-cf \
+  --description "service account for cloud functions"
+```
