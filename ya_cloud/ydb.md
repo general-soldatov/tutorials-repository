@@ -40,7 +40,7 @@ echo $FOLDER_ID
 ```bash
 yc resource-manager folder add-access-binding $FOLDER_ID \
   --subject serviceAccount:$SERVICE_ACCOUNT_ID \
-  --role editor 
+  --role ydb.editor 
 ```
 Создание статического ключа доступа
 ```bash
