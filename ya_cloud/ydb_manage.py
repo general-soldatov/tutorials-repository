@@ -4,7 +4,12 @@ from os import getenv
 from dotenv import load_dotenv
 
 class ListUsers:
+    """Класс для управления записями в базе данных YDB, название класса не принципиально.
+    """
     def __init__(self, dynamodb=None):
+        """Инициализация базы данных и сервисного аккаунта, в целях безопасности используются 
+           переменные окружения, либо указанные в файле .env
+        """
         self.dynamodb = dynamodb
         self.table = 'List_Users'
         if not self.dynamodb:
@@ -18,12 +23,14 @@ class ListUsers:
                 )
 
     def create_table(self):
+        """Метод создания таблицы, инициализируются ключи и столбцы таблицы
+        """
         table = self.dynamodb.create_table(
             TableName = self.table,
             KeySchema = [
                 {
                     'AttributeName': 'user_id',
-                    'KeyType': 'HASH'  # Ключ партицирования
+                    'KeyType': 'HASH'  # Ключ партицирования, можно добавить дополнительно ключ сортировки Range
                 }
             ],
             AttributeDefinitions = [
@@ -44,6 +51,8 @@ class ListUsers:
         return table
 
     def put_item(self, user_id, name, group):
+        """Метод добавления записи в таблицу.
+        """
         table = self.dynamodb.Table(self.table)
         tasks = {'S1': 0}
         response = table.put_item(
@@ -57,6 +66,8 @@ class ListUsers:
         return response
 
     def update_task(self, user_id, task, ball):
+        """Метод обновления записи.
+        """
         table = self.dynamodb.Table(self.table)
         response = table.update_item(
             Key = {
@@ -71,6 +82,8 @@ class ListUsers:
         return response
 
     def info_user(self, user_id):
+        """Метод запроса информации по ключу партицирования
+        """
         table = self.dynamodb.Table(self.table)
         response = table.query(
             ProjectionExpression = 'user_id, name, group, tasks',
@@ -79,10 +92,14 @@ class ListUsers:
         return response['Items']
 
     def all_users(self):
+        """Метод сканирования всех элементов таблицы.
+        """
         table = self.dynamodb.Table(self.table)
         return table.scan()['Items']
 
     def for_mailer(self, group=None):
+        """Метод выгрузки ключей таблицы для рассылки
+        """
         table = self.dynamodb.Table(self.table)
         scan_kwargs = {
             'ProjectionExpression': "user_id, group"
@@ -95,9 +112,21 @@ class ListUsers:
         return [int(item['user_id']) for item in response['Items'] if int(item['active'])]
 
     def delete_note(self, user_id):
+        """Метод удаления записи из базы данных.
+        """
         table = self.dynamodb.Table(self.table)
+        try:
+            response = table.delete_item(
+                Key = {'user_id': user_id},
+                )
+            return response
+
+        except Exception as e:
+            print('Error', e)
         
 
     def delete_table(self):
+        """Метод удаления таблицы из базы данных
+        """
         table = self.dynamodb.Table(self.table)
         table.delete()
