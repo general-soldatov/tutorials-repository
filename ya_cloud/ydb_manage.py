@@ -73,7 +73,7 @@ class ListUsers:
     def info_user(self, user_id):
         table = self.dynamodb.Table(self.table)
         response = table.query(
-            ProjectionExpression = 'user_id, name, group, tasks,
+            ProjectionExpression = 'user_id, name, group, tasks',
             KeyConditionExpression = Key('user_id').eq(user_id)
         )
         return response['Items']
@@ -93,6 +93,10 @@ class ListUsers:
                     if int(item['active']) and item['group'] == group]
 
         return [int(item['user_id']) for item in response['Items'] if int(item['active'])]
+
+    def delete_note(self, user_id):
+        table = self.dynamodb.Table(self.table)
+        
 
     def delete_table(self):
         table = self.dynamodb.Table(self.table)
