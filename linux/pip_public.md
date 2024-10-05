@@ -42,7 +42,7 @@ python3 -m pip install --upgrade twine
 ```
 После установки запустим Twine, чтобы загрузить все архивы в репозиторий:
 ```bash
-python3 -m twine upload
+python3 -m twine upload dist/*
 ```
 Вам будет предложено ввести имя пользователя и пароль. Для имени пользователя используйте `__token__`. Для пароля используйте значение токена, включая pypi-префикс.
 Более подробно описано в [документации](https://packaging.python.org/en/latest/tutorials/packaging-projects/), описание конфигурационного [файла](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#writing-pyproject-toml)
