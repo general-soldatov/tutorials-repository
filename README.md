@@ -31,5 +31,10 @@
 >
 > Это продолжение цитаты
 
+# Ссылки для офомления файла `README.md`
 
+* [Логотипы](https://shields.io/docs/logos)
+* [Оформляем README-файл профиля на GitHub](https://habr.com/ru/articles/649363/)
+* [markdown-badges](https://github.com/Ileriayo/markdown-badges)
+* [Красивые изображения вашего исходного кода](https://carbon.now.sh/)
 
