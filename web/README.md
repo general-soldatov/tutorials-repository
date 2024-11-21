@@ -29,4 +29,6 @@ data = soup.find('table',class_='dsnode-table')
 ## Полезные ссылки
 * Пример парсинга [таблицы с сайта](https://qna.habr.com/q/826703).  
 * Примеры [скриптов для парсинга](https://python-scripts.com/beautifulsoup-parsing)
-* 
+* [Веб-скрапинг динамических сайтов с помощью Python](https://ru-brightdata.com/blog/how-tos-ru/scrape-dynamic-websites-python)
+* [Парсинг сайта с помощью PYTHON + SELENIUM](https://habr.com/ru/articles/656609/)
+* [XPath — примеры запросов в html для парсинга сайта](https://habr.com/ru/articles/753332/)
