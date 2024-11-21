@@ -26,3 +26,7 @@ soup = BeautifulSoup(response.text,"html.parser")
 ```python
 data = soup.find('table',class_='dsnode-table')
 ```
+## Полезные ссылки
+* Пример парсинга [таблицы с сайта](https://qna.habr.com/q/826703).  
+* Примеры [скриптов для парсинга](https://python-scripts.com/beautifulsoup-parsing)
+* 
