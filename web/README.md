@@ -26,6 +26,11 @@ soup = BeautifulSoup(response.text,"html.parser")
 ```python
 data = soup.find('table',class_='dsnode-table')
 ```
+Чтобы для найденного элемента найти тег выше или ниже используем следующую конструкцию:
+```python
+data.previous_sibling #атрибут поиска предыдущего тега
+data.next_sibling #атрибут поиска следующего тега за элементом
+```
 ## Полезные ссылки
 * Пример парсинга [таблицы с сайта](https://qna.habr.com/q/826703).  
 * Примеры [скриптов для парсинга](https://python-scripts.com/beautifulsoup-parsing)
