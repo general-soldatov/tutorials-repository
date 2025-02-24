@@ -49,6 +49,7 @@
 
 # Study
 * [Академика](https://go.academika.ru/education/my)
+* [Алгоритмы и структуры данных](https://www.youtube.com/playlist?list=PLBkPHBq30-t4Ot2uvIIeOilCuatOMZT0c)
 * [Теоретическая механика](https://teach-in.ru/course/theoretical-mechanics-stepanyants/material)
 * [Мастер-класс по настройке вебинара в Pruffme](https://www.youtube.com/watch?v=pjTyetW5MBk)
 * [Стоит ли учиться, когда мир рушится и все непонятно? Анна Липатова](https://www.youtube.com/watch?v=fMdllpaUqaM)
