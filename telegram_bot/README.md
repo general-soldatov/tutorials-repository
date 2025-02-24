@@ -23,12 +23,21 @@
 [Как создать бота в Telegram](https://yandex.cloud/ru/docs/functions/tutorials/telegram-bot-serverless?utm_referrer=about%3Ablank)
 
 # Study
+[Академика](https://go.academika.ru/education/my)
 [Мастер-класс по настройке вебинара в Pruffme](https://www.youtube.com/watch?v=pjTyetW5MBk)
 [Стоит ли учиться, когда мир рушится и все непонятно? Анна Липатова](https://www.youtube.com/watch?v=fMdllpaUqaM)
 [Пишем мессенджер на Python. Интенсив по программированию](https://www.youtube.com/watch?v=Wd0tF-ggoTc)
+[Принципам сетевого и системного администрирования](https://sre.google/sre-book/foreword/)
+[Основы Python](https://education.yandex.ru/handbook/python)
 
 # Time
 [datetime — Basic date and time types](https://docs.python.org/3/library/datetime.html)
 [Работа с датой и временем в Python](https://python-scripts.com/datetime-time-python)
+
+# Web
+[Введение во Flask](https://pythonru.com/uroki/1-vvedenie-vo-flask)
+[Как купить домен и использовать доменное имя для размещения сайта или своих сервисов через NGINX](https://habr.com/ru/articles/716002/)
+[Создание собственного API на Python (FastAPI): Подключаем фронтенд и статические файлы](https://habr.com/ru/articles/831386/)
+[Insomnia — Инструкция по применению](https://habr.com/ru/articles/754154/)
 
 
