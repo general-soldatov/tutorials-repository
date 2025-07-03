@@ -1,12 +1,19 @@
 # LAB 7 «ПОДГОТОВКА ПЕЧАТНЫХ ДОКУМЕНТОВ ИЗ СУБД POSTGRESQL»
 
-1. Убедитесь, что PostgreSQL установлен и правильно настроен на вашем компью-тере. Если вы используете Linux, то необходимо перейти к пользователю, который имеет право работать с БД:
+1. Убедитесь, что PostgreSQL установлен и правильно настроен на вашем компьютере. Если вы используете Linux, то необходимо перейти к пользователю, который имеет право работать с БД:
+```bash
 sudo -i -u postgres
+```
 Также установите необходимые библиотеки для Python:
+```bash
 pip install sqlalchemy psycopg2 reportlab
+```
 2. Создайте новую базу данных orders_db в PostgreSQL:
+``sql
 CREATE DATABASE orders_db;
-3. Создайте таблицы clients и orders с соответствующими ограничениями целост-ности:
+```
+4. Создайте таблицы clients и orders с соответствующими ограничениями целостности:
+```sql
 CREATE TABLE clients (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -19,9 +26,9 @@ CREATE TABLE orders (
     order_date DATE NOT NULL,
     total_amount DECIMAL(10, 2) NOT NULL
 );
-
+```
 4. Добавьте несколько клиентов и заказов в таблицы:
-
+```sql
 INSERT INTO clients (name, email) VALUES 
 ('Иван Иванов', 'ivan@example.com'),
 ('Мария Петрова', 'maria@example.com');
@@ -29,21 +36,28 @@ INSERT INTO clients (name, email) VALUES
 INSERT INTO orders (client_id, order_date, total_amount) VALUES 
 (1, '2023-10-01', 1500.00),
 (2, '2023-10-02', 2500.00);
-
+```
 5. Извлеките данные о клиентах и их заказах с помощью SQL-запроса:
+```sql
 SELECT c.name, c.email, o.order_date, o.total_amount 
 FROM clients c 
 JOIN orders o ON c.id = o.client_id;
+```
 Поскольку мы будем использовать тестового пользователя для приложения, то сначала создадим его:
+```sql
 CREATE USER test WITH PASSWORD '1234';
+```
 Дадим ему права для работы с базой данных:
+```sql
 GRANT ALL PRIVILEGES ON DATABASE orders_db TO test;
+```
 Если нам нужно выдать права только для определённой таблицы:
+```sql
 GRANT ALL PRIVILEGES ON TABLE clients TO test;
-
+```
 6. Перейдём к разработке приложения на Python с использованием SQLAlchemy и ReportLab. Создайте файл generate_report.py и добавьте следующий код:
-
-from sqlalchemy import create_engine, Column, Integer, String, For-eignKey, Date, Numeric
+```python
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date, Numeric
 from sqlalchemy.orm import sessionmaker, declarative_base
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -81,7 +95,8 @@ pdf_file = "report.pdf"
 c = canvas.Canvas(pdf_file, pagesize=letter)
 
 # Регистрация шрифта с поддержкой кириллицы
-pdfmetrics.registerFont(TTFont('Arial', '/usr/share/fonts/truetype/ubuntu/UbuntuMono-BI.ttf'))  # Убедитесь, что файл Arial.ttf дост>c.setFont('Arial', 12)
+pdfmetrics.registerFont(TTFont('Arial', '/usr/share/fonts/truetype/ubuntu/UbuntuMono-BI.ttf'))  # Убедитесь, что файл Arial.ttf доступен
+c.setFont('Arial', 12)
 
 c.drawString(100, 750, "Отчет о заказах")
 
@@ -95,8 +110,9 @@ print(f"Отчет успешно сохранен в файл {pdf_file}")
 
 # Закрытие сессии
 session.close()
- 
+```
 7. Запустите приложение через консоль:
+```bash
 python generate_report.py
-
+```
 После выполнения скрипта будет создан PDF-документ report.pdf, содержащий информацию о клиентах и их заказах.
