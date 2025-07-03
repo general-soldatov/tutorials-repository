@@ -12,7 +12,7 @@ CREATE TABLE departments (
     name VARCHAR(100) NOT NULL UNIQUE
 );
 ```
-Создадим таблицу employees, которая будет содержать информацию о сотрудни-ках с ограничениями.
+Создадим таблицу employees, которая будет содержать информацию о сотрудниках с ограничениями.
 ```sql
 CREATE TABLE employees (
     id SERIAL PRIMARY KEY,
