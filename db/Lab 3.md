@@ -49,7 +49,7 @@ create table sellers (id int primary key, id_product int, price int, count int, 
 ```sql
 insert into sellers values (0, 1, 100, 10, 'cash');
 ```
-и т.д.
+и т.д.  
 10. Создание новой таблицы на основании созданных ранее таблиц.
 Новая таблица содержит поля: Наименование товара, наименование производителя, стоимость покупки, цена продажи.
 ```sql
