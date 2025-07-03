@@ -9,7 +9,7 @@ sudo -i -u postgres
 pip install sqlalchemy psycopg2 reportlab
 ```
 2. Создайте новую базу данных orders_db в PostgreSQL:
-``sql
+```sql
 CREATE DATABASE orders_db;
 ```
 4. Создайте таблицы clients и orders с соответствующими ограничениями целостности:
