@@ -130,6 +130,33 @@ method=”post” >
 9. Вставьте изображение https://ucp.by/images/2012/06/Kniga.jpg по аналогии с первым изображением.
 
 ### III. Формы
+1. Создайте форму со следующим кодом и проверьте в браузере:
+```html
+<h1>My form</h1>
+<form>
+  <p><label>Ваше имя
+      <input type="text" name="your_name"></label></p>
+  <p><label>Email
+    <input type="text" name="email"></label></p>
+  <p><label>Telegram
+      <input type="text" name="telegram"></label></p>
+  <p>Выберите тип</p>
+  <p><select name="selector">
+    <option value='HTML'>HTML</option>
+    <option value='CSS'>CSS</option>
+    </select></p>
+  <p>
+    <label>Адрес</label>
+  </p>
+  <p><textarea name="address" cols="30" rows="5"></textarea></p>
+  <p>
+    <input type="submit">
+  </p>
+</form>
+```
+2. Сделайте форму по следующему образцу:
+![image](https://github.com/user-attachments/assets/f9109d49-de0f-4723-b115-3dd24a9591f0)
 
+3. Добавьте в неё по своему желанию чекбоксы или радиокнопки.
 
 ## Содержание отчёта
