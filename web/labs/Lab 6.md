@@ -318,4 +318,22 @@ $phones = array("apple"=>"iPhone5",
 foreach($phones as $key=>$value)
  echo "$key => $value <br />";
 ```
+5. Для сортировки по возрастанию используется функция asort:
+```php
+$tablets = array("lenovo" => "Lenovo IdeaTab A3500",
+ "samsung" => "Samsung Galaxy Tab 4",
+ "apple" => "Apple iPad Air");
+asort($tablets, SORT_STRING);
+echo "<ul>";
+foreach ($tablets as $key => $value)
+{
+ echo "<li>$key : $value</li>";
+}
+echo "</ul>";
+```
+Тип сортировки может принимать три значения:
+* SORT_REGULAR: автоматический выбор сортировки
+* SORT_NUMERIC: числовая сортировка
+* SORT_STRING: сортировка по алфавиту
+
 ## Содержание отчёта
