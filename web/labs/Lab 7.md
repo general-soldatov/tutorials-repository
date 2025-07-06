@@ -48,5 +48,15 @@ CREATE TABLE students(
     group_num int(2)
     );
 ```
+3. Аналогичным образом создать структуру таблицы Subjects (справочник предметов):
+```sql
+CREATE TABLE subjects(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(10),
+    cycle VARCHAR(10),
+    hours INT,
+    dep VARCHAR(20)
+);
+```
 
 ## Содержание отчёта
