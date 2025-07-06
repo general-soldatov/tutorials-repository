@@ -133,4 +133,41 @@ DELIMITER ;
 ```sql
 CALL studs(243);
 ```
+14. Создать и открыть файл index.php начальной страницы веб-приложения. Ввести HTML-разметку страницы index.php:
+```html
+<HTML>
+<HEAD><TITLE>Лабораторная работа 3</TITLE></HEAD>
+<BODY>
+<H2>Информация о студентах</H2>
+<FORM id="form" method="POST" action="index.php">
+	<TABLE border="1" width="60%">
+		<TR>
+		<TH width="10%">Код</TH>
+		<TH width="20%">Зачетная книжка</TH>
+		<TH width="40%">ФИО</TH>
+		<TH width="30%">Группа</TH>
+		</TR>
+		<TR align="center">
+		<TD width="10%">Значение кода</TD>
+		<TD width="20%">Значение зачетки</TD>
+		<TD width="40%">Значение ФИО</TD>
+		<TD width="30%">Значение группы</TD>
+		</TR>
+	</TABLE>
+<BR/> Номер зачетной книжки: <input name="zk" type="text"/>
+<input type="submit" value="Запрос"/>
+</FORM>
+</BODY>
+</HTML>
+```
+15. Проверить работоспособность созданной страницы в веб-браузере.
+16. Создать PHP-сценарий соединения с базой данных. Создать в виртуальной директории и открыть файл connection.php. Ввести программный код сценария для соединения с локальным сервером и сохранить:
+```php
+<?php
+$link = @mysql_connect("localhost", "root") or die("Невозможно соединиться с сервером");
+// ввести программный код соединения с базой данных Education:
+$db=@mysql_select_db("Education") or die("Нет такой базы данных");
+?>
+
+```
 ## Содержание отчёта
