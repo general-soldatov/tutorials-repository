@@ -110,5 +110,12 @@ SELECT id, learn_book_id, CONCAT(first_name, ' ', name) AS full_name, CONCAT(spe
 ```sql
 CREATE VIEW study AS SELECT id, learn_book_id, CONCAT(first_name, ' ', name) AS full_name, CONCAT(speciality,'-',course,'-',group_num) as group_data FROM students;
 ```
+11. Аналогичным образом создать представление для вывода сведений об успеваемости студентов из таблицы успеваемости с указанием сведений о студенте из запроса Students_info и сведений о предмете из таблицы предметов. Результат должен содержать следующие поля: ФИО студента, Группа, Предмет, Дата, Оценка. Назвать представление как study_score.
+Программный код запроса:
+```sql
 
+SELECT learn_book_id, full_name, group_data, score, subjects.name, date_of 
+FROM study, scores, subjects 
+WHERE study.id = scores.stud AND subjects.id = scores.discipline;
+```
 ## Содержание отчёта
