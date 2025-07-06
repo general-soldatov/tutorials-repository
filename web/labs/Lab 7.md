@@ -106,5 +106,9 @@ ALTER TABLE `scores` ADD FOREIGN KEY (`discipline`) REFERENCES `subjects`(`id`) 
 ```sql
 SELECT id, learn_book_id, CONCAT(first_name, ' ', name) AS full_name, CONCAT(speciality,'-',course,'-',group_num) as group_data FROM students;
 ```
+10. Сформировать представление по результатам запроса:
+```sql
+CREATE VIEW study AS SELECT id, learn_book_id, CONCAT(first_name, ' ', name) AS full_name, CONCAT(speciality,'-',course,'-',group_num) as group_data FROM students;
+```
 
 ## Содержание отчёта
