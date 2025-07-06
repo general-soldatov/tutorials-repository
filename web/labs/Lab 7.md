@@ -58,5 +58,14 @@ CREATE TABLE subjects(
     dep VARCHAR(20)
 );
 ```
-
+4. Аналогичным образом создать структуру таблицы scores (успеваемость студентов по предметам): 
+```sql
+CREATE TABLE scores(
+	stud INT,
+    discipline INT,
+    score CHAR(1),
+    date_of DATE,
+    PRIMARY KEY (stud, discipline)
+);
+```
 ## Содержание отчёта
