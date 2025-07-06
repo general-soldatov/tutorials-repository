@@ -118,4 +118,15 @@ SELECT learn_book_id, full_name, group_data, score, subjects.name, date_of
 FROM study, scores, subjects 
 WHERE study.id = scores.stud AND subjects.id = scores.discipline;
 ```
+12. Создать хранимую процедуру для вывода сведений о студенте по номеру его зачетной книжки из представления:
+```sql
+DELIMITER $
+CREATE PROCEDURE studs(IN LBID INT)
+BEGIN
+	SELECT * FROM study_score
+	WHERE learn_book_id = LBID;
+END;
+$
+DELIMITER ;
+```
 ## Содержание отчёта
