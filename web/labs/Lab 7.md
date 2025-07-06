@@ -68,4 +68,32 @@ CREATE TABLE scores(
     PRIMARY KEY (stud, discipline)
 );
 ```
+5. Задать ограничения для столбцов таблицы Students в форме триггера students_constraints, срабатывающего при попытке вставки новой записи в таблицу: 
+```sql
+-- удалим старый триггер
+DROP TRIGGER IF EXISTS students_constraints_insert;
+
+DELIMITER $ -- устанавливаем новый разделитель
+CREATE TRIGGER students_constraints_insert 
+BEFORE INSERT ON students 
+FOR EACH ROW 
+BEGIN
+	IF NOT (NEW.course BETWEEN 1 AND 6) THEN -- курс в пределах 1...6
+		SET NEW.course = 0;
+	END IF; 
+    
+	IF NOT(NEW.speciality REGEXP '^[A-Z]$') THEN -- специальность A...z
+		SET NEW.speciality = 0;
+	END IF;
+    
+	IF NOT (NEW.group_num BETWEEN 1 AND 99) THEN
+		SET NEW.group_num = 0;
+	END IF;
+END  $
+DELIMITER ; -- меняем разделитель на ;
+```
+6. Аналогичным образом запрограммировать триггер students_constraints_update,
+срабатывающий при попытке изменения записи в таблице.
+7. Для таблиц Subjects и Uspev написать по два триггера, проверяющие целостность данных при вставке и изменении данных.
+
 ## Содержание отчёта
