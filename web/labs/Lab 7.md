@@ -33,7 +33,20 @@ mysql_result (int $result, int $row, mixed $field);
 ```
 Параметр функции $row задает номер записи, а параметр $field - имя или порядковый номер поля.
 
-
 ## Порядок выполнение
+1. Зайдите в панель управления хостинга и создайте базу данных.
+2. Перейдите в панель управления phpMyAdmin, раздел SQL и напишите запрос на создание таблицы:
+```sql
+CREATE TABLE students(
+    id INT PRIMARY KEY AUTO_INCREMENT, 
+    learn_book_id INT(6) UNIQUE,
+    first_name varchar(20),
+    name varchar(20),
+    speciality varchar(7),
+    birth_date date,
+    course int(1),
+    group_num int(2)
+    );
+```
 
 ## Содержание отчёта
