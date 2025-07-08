@@ -128,5 +128,21 @@ RanFor score: {ranfor.score(X_test, y_test)}
 """)
 ```
 ![image](https://github.com/user-attachments/assets/3afb8292-2a78-4eee-aef6-bff959fa80bf)
+Создайте данные для новых объектов и выполните их классификацию.  
+Так как каждый цветок ириса характеризуется четырьмя параметрами, то для каждого цветка укажите 4 числа.  
+Для первого цветка первое число должно совпадать с порядковым номером дня из даты рождения обучающегося. Для второго цветка первое число должно совпадать с порядковым номером месяца из даты рождения обучающегося.
+```py
+day = 19
+month = 2
+X_new = [[day, 4, 3, 1], [month, 9, 3, 10]]
+
+print(f"""kNN: {iris_dataset['target_names'][knn.predict(X_new)]}
+LogReg: {iris_dataset['target_names'][logreg.predict(X_new)]}
+RanFor: {iris_dataset['target_names'][ranfor.predict(X_new)]}
+""")
+```
+![image](https://github.com/user-attachments/assets/a928fe7c-ace5-4780-8e4f-9cb020866b66)
+Сохраните блокнот через меню «Файл / Сохранить».  
+Переименуйте файл на Google Диске, используя шаблон «Лабораторная работа № 1 студента группы … Фамилия Имя», указав свой номер группы, фамилию и имя.
 
 
