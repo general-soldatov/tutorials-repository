@@ -73,3 +73,27 @@ plt.ylabel('Petal Width')
 plt.tight_layout()
 plt.show()
 ```
+Результат можем наблюдать на графике
+![image](https://github.com/user-attachments/assets/23d6eab7-2eb6-4676-a348-c386c515dab5)
+
+## Иерархическая кластеризация:
+
+Теперь рассмотрим метод иерархической кластеризации.
+
+Импортируем необходимые библиотеки и выполним кластеризацию.
+```py
+from sklearn.cluster import AgglomerativeClustering
+from scipy.cluster.hierarchy import dendrogram, linkage
+
+hierarchical = AgglomerativeClustering(n_clusters=3)
+hierarchical_labels = hierarchical.fit_predict(no_labeled_data)
+
+data['hierarchical_cluster'] = hierarchical_labels
+
+data[['class', 'hierarchical_cluster']].head(10)
+```
+Построим дендрограмму для визуализации иерархической кластеризации.
+
+
+Сохраните блокнот через меню «Файл / Сохранить».
+Переименуйте файл на Google Диске, используя шаблон «Лабораторная работа № 3 студента группы … Фамилия Имя», указав свой номер группы, фамилию и имя.
