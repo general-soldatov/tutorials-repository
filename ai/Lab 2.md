@@ -106,4 +106,27 @@ Size of test samples: {len(X_test)} objects.
 Обучите и протестируйте две модели (линейная регрессия, полиномиальная регрессия). Используйте функции fit (обучение) и predict (тестирование).  
 Для обучения моделей воспользуйтесь функцией fit из библиотеки sklearn. Функция fit подает на вход обучающей выборки данные о характеристиках объектов и соответствующие им метки.  
 Для тестирования моделей воспользуйтесь функцией predict из библиотеки sklearn. Данная функция подает на входной слой нейросети дан- ные о характеристиках объектов из тестируемой выборки (параметры объ- ектов недвижимости), но, в отличие от функции fit, не подает на выходной слой метки данных объектов (цены продажи этих объектов). Модель сама должна спрогнозировать цены объектов недвижимости из тестируемой выборки.
+```py
+# linear regression
+# create and train model
 
+LR = LinearRegression()
+LR.fit(X_train, y_train)
+
+# making a prediction
+y_pred_LR = LR.predict(X_test)
+
+# polynomial regression
+# converting features
+poly = PolynomialFeatures(degree=2)
+X_train_poly = poly.fit_transform(X_train)
+X_test_poly = poly.transform(X_test)
+
+# train tne model
+LR_poly = LinearRegression()
+LR_poly.fit(X_train_poly, y_train)
+
+# making a prediction
+y_pred_poly = LR_poly.predict(X_test_poly)
+```
+Выведите на экран фактические цены, по которым было продано k первых объектов недвижимости из тестируемой выборки, и цены продажи этих объектов, предсказанные разработанными моделями. Установите значение k равным номеру варианта.
