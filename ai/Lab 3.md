@@ -93,6 +93,21 @@ data['hierarchical_cluster'] = hierarchical_labels
 data[['class', 'hierarchical_cluster']].head(10)
 ```
 Построим дендрограмму для визуализации иерархической кластеризации.
+```py
+linked = linkage(no_labeled_data, method='ward')
+
+plt.figure(figsize=(15, 7))
+dendrogram(linked, orientation='top',
+           labels=data['class'].values,
+           distance_sort='descending',
+           show_leaf_counts=True)
+plt.title("Dendrogrm for Hierarchical Clustering")
+plt.xlabel('Samples')
+plt.ylabel('Distance')
+plt.show()
+```
+Результам является представленный график:
+![image](https://github.com/user-attachments/assets/0665e18a-130f-4ad4-95bc-535b1b505c5e)
 
 
 Сохраните блокнот через меню «Файл / Сохранить».
