@@ -155,6 +155,42 @@ print('Answer:', answer)
 *	«награждение» – информация о наградах.  
   
 В качестве основы для создания чат-бота, отвечающего на вопросы о научном конгрессе «Интерэкспо ГЕО-Сибирь», вы можете использовать программный код:
+```py
+import json
+import random
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.ensemble import RandomForestClassifier
 
+
+with open(file_path, 'r', encoding='utf-8') as file:
+    GeoTest = json.load(file)
+
+XX, yy = [], []
+
+for name, data in GeoTest['Интерэкспо ГЕО-Сибирь'].items():
+    for example in data['Вопрос']:
+        XX.append(example)
+        yy.append(name)
+
+geo_vectorizer = CountVectorizer()
+GeoM = geo_vectorizer.fit_transform(XX)
+
+geoRandomFCI = RandomForestClassifier()
+geoRandomFCI.fit(GeoM, yy)
+
+def getAnswerGeo(questionGeo):
+    responseGeo = GeoTest['Интерэкспо ГЕО-Сибирь'][questionGeo]['Ответ']
+    return random.choice(responseGeo)
+
+while True:
+    textGeo = input("Write youre question: ")
+    if textGeo == 'q':
+        print('Exit with dialog!')
+        break
+    testGeo = geo_vectorizer.transform([textGeo])
+    questionGeo = geoRandomFCI.predict(testGeo)[0]
+    answerGeo = getAnswerGeo(questionGeo)
+    print('Answer:', answerGeo)
+```
 
 
