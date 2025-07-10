@@ -32,7 +32,10 @@ Google Colab (далее Colab) – облачный сервис, которы�
 # импортируем библиотеки и модули
 import sklearn
 from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split from sklearn.neighbors import KNeighborsClassifier from sklearn.linear_model import LogisticRegression from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 ```
 Загрузите набор данных load_iris из модуля datasets библиотеки sklearn.
 ```py
