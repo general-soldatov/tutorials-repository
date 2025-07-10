@@ -126,3 +126,59 @@ def get_intent(text):
     return result
 ```
 Реализация функции ответа бота на основе правил и машинного обучения.
+```py
+# Функция ответа бота
+def answer(text, min_confidence=0.3, fall_text='Извините, я не понимаю ваш вопрос.'):
+    answer = lambda key: testGeo[EXPO_KEY][key].get('Ответ', ["Ответ не найден"])
+    intent = get_intent(text)
+    if intent in testGeo[EXPO_KEY]:
+        return random.choice(answer(intent))
+    
+    if XX is not None:
+        test = vectorizer.transform([text])
+        probabilities = model.predict_proba(test)
+        predicted_intent = model.predict(test)[0]
+        confidence = max(probabilities[0])
+        print(f'ML-model predicted: {predicted_intent} with confidence {confidence:.2f}')
+        if confidence < min_confidence:
+            return fall_text
+        if predicted_intent in testGeo[EXPO_KEY]:
+            return random.choice(answer(intent))
+    
+    return fall_text
+```
+Обработка команд и сообщений для Telegram-бота.
+```py
+# обработчик команды /start
+async def start(update: Update, context: CallbackContext):
+    await update.message.reply_text("""Привет!
+    Я бот, отвечающий на вопросы о научном конгрессе Интерэкспо ГЕО-Сибирь. 
+    Задайте мне вопрос!""")
+
+# обработчик текстовых сообщений
+async def send_message(update: Update, context: CallbackContext):
+    user_text = update.message.text
+    response = answer(user_text)
+    await update.message.reply_text(response)
+
+# добавляем обработчики сообщений 
+app.add_handler(CommandHandler('start', start))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, send_message))
+```
+Запуск бота. 
+```py
+# запуск бота
+import asyncio
+
+nest_asyncio.apply()
+
+async def main():
+    await app.run_polling()
+
+# Проверяем, работает ли код в среде, поддерживающей event loop 
+if __name__ == '__main__':
+    try:
+        asyncio.run(main())
+    except RuntimeError:
+        print('Async event loop is driven')
+```
