@@ -29,6 +29,7 @@ BotFather – это официальный бот в Telegram, предназн
 import nltk
 import re
 import nest_asyncio
+import random
 from google.colab import drive
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
@@ -69,7 +70,7 @@ except (FileNotFoundError, ValueError) as e:
 Создадим объект приложения Telegram-бота: проверим, задан ли токен, и либо создадим объект Telegram-бота, либо остановим выполнение, если токен отсутствует.
 ```py
 if TOKEN:
-    app = Application.builder().token(TOKEN).build
+    app = Application.builder().token(TOKEN).build()
 else:
     print('Bot can`t working without TOKEN')
     exit()
@@ -107,20 +108,19 @@ def normalize(text):
 
 # функция оценки схожести строк
 def get_rank(text1, text2):
-    text1, text2 = normalize(text1), normalize(text)
+    text1, text2 = normalize(text1), normalize(text2)
     if not text1 or not text2:
         return 100
     return (nltk.edit_distance(text1, text2) / 
                       (len(text1) + len(text2) / 2)) * 100
 
 # определение намерения пользователя
-def get_intent(text):
-    best_rank = 50
+def get_intent(text, best_rank = 50):
     result = None
     for name, data in testGeo[EXPO_KEY].items():
-        for questions in data.get('Вопрос', []):
+        for question in data.get('Вопрос', []):
             rank = get_rank(text, question)
-            if rank > best_rank:
+            if rank < best_rank:
                 best_rank, result = rank, name
     
     return result
@@ -129,10 +129,10 @@ def get_intent(text):
 ```py
 # Функция ответа бота
 def answer(text, min_confidence=0.3, fall_text='Извините, я не понимаю ваш вопрос.'):
-    answer = lambda key: testGeo[EXPO_KEY][key].get('Ответ', ["Ответ не найден"])
+    answer_bot = lambda key: testGeo[EXPO_KEY][key].get('Ответ', ["Ответ не найден"])
     intent = get_intent(text)
     if intent in testGeo[EXPO_KEY]:
-        return random.choice(answer(intent))
+        return random.choice(answer_bot(intent))
     
     if XX is not None:
         test = vectorizer.transform([text])
@@ -143,7 +143,7 @@ def answer(text, min_confidence=0.3, fall_text='Извините, я не пон
         if confidence < min_confidence:
             return fall_text
         if predicted_intent in testGeo[EXPO_KEY]:
-            return random.choice(answer(intent))
+            return random.choice(answer_bot(predicted_intent))
     
     return fall_text
 ```
