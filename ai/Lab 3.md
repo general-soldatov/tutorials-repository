@@ -106,7 +106,7 @@ plt.xlabel('Samples')
 plt.ylabel('Distance')
 plt.show()
 ```
-Результом является представленный график:
+Результатом является представленный график:
 ![image](https://github.com/user-attachments/assets/0665e18a-130f-4ad4-95bc-535b1b505c5e)
 
 
