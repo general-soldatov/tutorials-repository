@@ -52,6 +52,7 @@ load_iris print(iris_dataset.DESCR)
 *	ширина чашелистика в сантиметрах (sepal width);
 *	длина лепестка в сантиметрах (petal length);
 *	ширина лепестка в сантиметрах (petal width).
+  
 Все цветки ириса подразделяются на 3 класса:
 *	setosa;
 *	versicolour;
