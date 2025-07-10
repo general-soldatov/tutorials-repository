@@ -99,3 +99,133 @@ text = input('Question: ')
 pattern = r"[^\w\s]"
 print(re.sub(pattern, '', text))
 ```
+В предыдущих пунктах мы использовали функцию lower() для преобразования текста в нижний регистр и функцию sub() для удаления из исходного текста знаков препинания. Теперь объединим их в одну функцию normalize, которая преобразует текст в нижний регистр и удалит знаки препинания.  
+Создайте пользовательскую функцию normalize для нормализации вопроса пользователя.  
+```py
+import re
+
+def normalize(text):
+  text = text.lower()
+  punctuation = r"[^\w\s]"
+  return re.sub(punctuation, '', text)
+```
+Создайте функцию get_rank_normalize, которая подсчитает, на сколько процентов различаются нормализованный вопрос пользователя и вопрос, записанный в программе.
+```py
+import nltk
+
+def get_rank_normalize(text_1, text_2):
+    text_1, text_2 = normalize(text_1), normalize(text_2)
+    distance = nltk.edit_distance(text_1, text_2)
+    average_length = (len(text_1) + len(text_2)) / 2
+    return distance / average_length * 100
+```
+Подключите Google Диск к среде Google Colab и загрузите файл с информацией о научном конгрессе «Интерэкспо ГЕО-Сибирь» (см. лабораторную работу № 4), используя Google Диск в среде Google Colab.  
+После подключения Google Диска к среде Google Colab найдите на подключенном Google Диске файл с информацией о научном конгрессе «Интерэкспо ГЕО-Сибирь» и скопируйте путь к этому файлу.  
+```py
+import json 
+
+with open(file_path_gis, 'r', encoding='utf-8') as smirnovGeo:
+    testGeo = json.load(smirnovGeo)
+```
+Создадим функцию getIntent() для определения объекта. Введите две новые переменные:  
+*	best_rank с начальным значением 70;  
+*	result с начальным значением None.
+  
+Значение 70 у переменной best_rank предполагает, что функция get_rank_normalize возвращает числовой результат, отражающий степень различия между пользовательским вопросом и вопросами из базы данных. Чем меньше это значение, тем ближе вопросы друг к другу. Значение 70 в нашем случае выбрано эмпирическим путем как максимальный допустимый порог различий.  
+Загрузите  метод  items(),  который  возвращает  копию  списка  пар «ключ – значение» словаря.  
+Ключом (name) должны быть названия разделов информации о научном  конгрессе  «Интерэкспо  ГЕО-Сибирь»:  «Тематика»,  «Спикеры», «Длительность», «Секции» и др. Значениями (data) должны быть другие объекты, включенные в разделы информации о конгрессе.  
+Используйте два цикла for.  
+Назначение этих циклов – найти значение ключа «Вопрос» в загруженном файле GEO-Siberia.json, для которого значение функции get_rank_normalize будет минимальным. Другими словами, нужно найти в файле GEO-Siberia.json вопрос с наименьшими отличиями в символах от пользовательского вопроса.
+```py
+def getIntent(text):
+    best_rank = 70
+    result = None
+    for name, data in testGeo['Интерэкспо ГЕО-Сибирь'].items():
+        for question in data['Вопрос']:
+            rank = get_rank_normalize(text, question)
+            if rank < best_rank:
+              best_rank = rank
+              result = name
+    
+    return result
+```
+Выведите результаты функции getIntent на экран.  
+```
+import random
+
+text = input('Question: ')
+intention = getIntent(text)
+print('Answer:', end=' ')
+if intention:
+    print(intention)
+else:
+    failure_phrases = ("Пожалуйста, перефразируйте вопрос", 
+                       "Вы спрашиваете не о конференции")
+    print(random.choice(failure_phrases))
+```
+Поиск ответа осуществляется в файле GEO-Siberia.json, который предварительно загружен в среду Google Colab. Ответ находится в объекте «Ответ», относящемся к разделу информации о конференции. Название раздела определяется с помощью функции getIntent.  
+Ответ для пользователя выбирается случайным образом из множества возможных значений ключа «Ответ» с использованием функции choice() из модуля random. Эта функция позволяет получить случайный элемент из переданной ей последовательности строк.  
+Сгенерируйте ответ на вопрос пользователя.
+```py
+responses = testGeo['Интерэкспо ГЕО-Сибирь'][intention]['Ответ']
+print(random.choice(responses))
+```
+В новой кодовой ячейке напишите программный код чат-бота, основанный на алгоритмах машинного обучения (см. лабораторную работу № 4).
+```py
+import json
+import random
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.ensemble import RandomForestClassifier
+
+
+with open(file_path_gis, 'r', encoding='utf-8') as file:
+    GeoTest = json.load(file)
+
+XX, yy = [], []
+
+for name, data in GeoTest['Интерэкспо ГЕО-Сибирь'].items():
+    for example in data['Вопрос']:
+        XX.append(example)
+        yy.append(name)
+
+geo_vectorizer = CountVectorizer()
+GeoM = geo_vectorizer.fit_transform(XX)
+
+geoRandomFCI = RandomForestClassifier()
+geoRandomFCI.fit(GeoM, yy)
+
+def getAnswerGeo(questionGeo):
+    responseGeo = GeoTest['Интерэкспо ГЕО-Сибирь'][questionGeo]['Ответ']
+    return random.choice(responseGeo)
+
+while True:
+    textGeo = input("Write youre question: ")
+    if textGeo == 'q':
+        print('Exit with dialog!')
+        break
+    testGeo = geo_vectorizer.transform([textGeo])
+    questionGeo = geoRandomFCI.predict(testGeo)[0]
+    answerGeo = getAnswerGeo(questionGeo)
+    print('Answer:', answerGeo)
+```
+
+Логика работы чат-бота: сначала выполняется программный код чат-бота, использующего библиотеки обработки естественного языка. Если этот код не находит соответствующий раздел информации о научном конгрессе «Интерэкспо ГЕО-Сибирь» для заданного пользователем вопроса, то поиск продолжается с использованием чат-бота, работающего на алгоритмах машинного обучения.
+```py
+while True:
+    textGeo = input("Question: ")
+    print('Answer:', end=' ')
+    if textGeo == 'q':
+        print('Exit with dialog!')
+        break
+
+    intention = getIntent(textGeo)
+    if intention:
+        responses = GeoTest['Интерэкспо ГЕО-Сибирь'][intention]['Ответ']
+        print(random.choice(responses))
+        continue
+
+    testGeo = geo_vectorizer.transform([textGeo])
+    questionGeo = geoRandomFCI.predict(testGeo)[0]
+    print(getAnswerGeo(questionGeo))
+```
+Сохраните блокнот через меню «Файл / Сохранить». Переименуйте файл на Google Диске, используя шаблон «Лабораторная работа № 5 студента группы … Фамилия Имя», указав свой номер группы, фамилию и имя.
