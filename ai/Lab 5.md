@@ -150,7 +150,7 @@ def getIntent(text):
     return result
 ```
 Выведите результаты функции getIntent на экран.  
-```
+```py
 import random
 
 text = input('Question: ')
