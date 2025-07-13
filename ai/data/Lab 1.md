@@ -139,4 +139,53 @@ plt.show()
 ```
 <img width="554" height="455" alt="image" src="https://github.com/user-attachments/assets/181696c6-1518-4522-ab9c-101e5c162aad" />
 
+Ниже показан пример более тонкой настройки параметров графика.
+```py
+c = df['Churn'].map({False: 'lightblue', True: 'orange'})
+edge_c = df['Churn'].map({False: 'blue', True: 'red'})
 
+plt.scatter(df['Total day charge'], df['Total intl charge'],
+            color=c, edgecolors=edge_c)
+plt.xlabel('Дневные начисления')
+plt.ylabel('Международн. начисления')
+plt.show()
+```
+<img width="554" height="432" alt="image" src="https://github.com/user-attachments/assets/83979a21-8148-4169-aba3-415b64131035" />
+
+Данный график можно построить различными способами, например, можно добавлять множества точек отдельными подмножествами, указывая параметры визуализации для каждого подмножества:
+```py
+data_churn = df[df['Churn']]
+data_loyal = df[~df['Churn']]
+
+plt.scatter(data_churn['Total day charge'],
+            data_churn['Total intl charge'],
+            color='orange',
+            edgecolors='red',
+            label='Ушли')
+
+plt.scatter(data_loyal['Total day charge'],
+            data_loyal['Total intl charge'],
+            color='lightblue',
+            edgecolors='blue',
+            label='Остались')
+plt.xlabel('Дневные начисления')
+plt.ylabel('Международн. начисления')
+plt.title('Распределение клиентов')
+plt.show()
+```
+<img width="554" height="455" alt="image" src="https://github.com/user-attachments/assets/bb73f0fb-66cc-416d-98f6-ba872768cb59" />
+
+В реальных задачах машинного обучения при первичном анализе данных необходимо выявить корреляции признаков обучающей выборки. В пакете Pandas имеется встроенный инструмент для этого – метод corr() класса DataFrame. Ниже показан фрагмент вывода этой функции:
+```py
+data = df.drop(['State', 'International plan',	'Voice mail plan'], axis=1)
+data.corr()
+```
+<img width="828" height="542" alt="image" src="https://github.com/user-attachments/assets/bf2049bd-fed2-4794-8774-d66291e24102" />
+
+Полученная матрица имеет размер 17 × 17. Это незначительный размер (в реальных задачах машинного обучения размеры матриц корреляции имеют порядки 106 − 1010 и более), но даже для матрицы рассматриваемого набора данных проанализировать корреляцию признаков вручную – трудоемкая задача. Например, можно использовать скрипты, для выделения больших коэффициентов корреляции. Но лучше использовать специальный тип графика – heatmap.
+```py
+sns.heatmap(data.corr(), cmap=plt.cm.Blues);
+```
+<img width="673" height="576" alt="image" src="https://github.com/user-attachments/assets/cb3a4959-7f9e-4a14-a6be-de37a6ba76cc" />
+
+Коррелирующие признаки обычно удаляются и не рассматриваются в процессе обучения.
