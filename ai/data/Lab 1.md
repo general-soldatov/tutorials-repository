@@ -99,3 +99,44 @@ sns.countplot(data=df['International plan'], palette='Set2')
 ```
 <img width="567" height="432" alt="image" src="https://github.com/user-attachments/assets/3c07d0d7-76a7-4e51-a579-9ed485028bf4" />
 
+```py
+sns.countplot(df[df['State'].isin(df['State'].value_counts().head(5).index)]['State'], palette='Set1');
+```
+<img width="568" height="432" alt="image" src="https://github.com/user-attachments/assets/62425e20-c633-4867-bcdc-e1e86c4b4163" />
+
+Одним из вариантов визуализации соотношения количественных признаков является диаграмма по нескольким признакам. Рассмотрим пример демонстрирующий сравнение распределений показателей, связанных с финансовыми затратами клиентов. Упрощенно, можно сказать, что это все показатели, содержащие подстроку «charge» в имени показателя. Ниже представлен код для отбора требуемых показателей.
+```py
+feats = [f for f in df.columns if 'charge' in f]
+feats
+```
+После отбора интересующих показателей можно построить диаграммы для сравнения:
+```py
+df[feats].hist(figsize=(5, 5));
+```
+<img width="443" height="451" alt="image" src="https://github.com/user-attachments/assets/57d48bf4-616e-417e-b670-6bcd01726d77" />
+
+Часто используют попарное сравнение признаков для обеспечения широкого взгляда на набор данных. На диаганальных графиках ниже представлены гистограммы распределения отдельного признака, на внедиаганальных позициях – попарные распределения.  
+```py
+sns.pairplot(df[feats]);
+```
+<img width="986" height="986" alt="image" src="https://github.com/user-attachments/assets/f64f4aa1-eefb-4907-a888-0ee909a1e487" />
+
+Можно реализовать более сложные графики. Например, если требуется добавить к существующим признакам, целевой признак Churn (количество отказов) и раскрасить разные типы элементов, то можно воспользоваться попарными распределениями, но с отображением подмножеств отказов.
+```py
+sns.pairplot(df[feats + ['Churn']], hue='Churn');
+```
+<img width="1080" height="986" alt="image" src="https://github.com/user-attachments/assets/06e58b7e-d7e8-472e-b8b7-d384ac26201f" />
+
+До сих пор использовались возможности библиотеки seaborn, а также методы pandas (которые производят визуализацию, обращаясь к библиотеке matplotlib). Библиотека matplotlib наиболее известная и широко применяемая при анализе данных в рамках стека технологий python. Ниже показан пример использования графика scatter библиотеки matplotlib, предназначенного для вывода множества точек.
+```py
+plt.scatter(df['Total day charge'], 
+            df['Total intl charge'],
+            color='lightblue', edgecolor='blue')
+plt.xlabel('Дневные начисления')
+plt.ylabel('Международн. начисления')
+plt.title('Распределение по 2 признакам')
+plt.show()
+```
+<img width="554" height="455" alt="image" src="https://github.com/user-attachments/assets/181696c6-1518-4522-ab9c-101e5c162aad" />
+
+
