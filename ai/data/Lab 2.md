@@ -15,7 +15,7 @@ userId,movieId,tag,timestamp
 4,1732,dark,comedy,1573943598  
 ...  
   
-Описание полей:  
+### Описание полей:  
 ● userId – идентификатор пользователя;  
 ● movieId – идентификатор фильма;  
 ● tag – название тега;  
@@ -29,12 +29,76 @@ userId,movieId,rating,timestamp
 1,306,3.5,1147868817  
 1,307,5.0,1147868828  
 ...  
-Описание полей:  
+
+### Описание полей:  
 ● userId – идентификатор пользователя;  
 ● movieId – идентификатор фильма;  
 ● rating – оценка, которую пользователь поставил фильму;  
 ● timestamp – количество секунд, прошедших с 1 января 1970.  
+  
 Строки упорядочены по userId, а затем по movieId.  
+
+## movies.csv
+Таблица movies.csv содержит информацию о фильмах. Каждая строка представляет информацию об одном фильме. Названия фильмов вводились вручную или были импортированы с сайта https://www.themoviedb.org/.   
+### Формат данных:
+movieId,title,genres  
+1,Toy Story (1995),Adventure|Animation|Children|Comedy|Fantasy  
+2,Jumanji (1995),Adventure|Children|Fantasy  
+3,Grumpier Old Men (1995),Comedy|Romance  
+...  
+
+### Описание полей:  
+● movieId – идентификатор фильма;  
+● title – название фильма и год выпуска в скобках после названия;  
+● genres – список жанров фильма, все жанры записываются в одном поле через разделитель “|”.   
+
+Допустимые жанры:  
+1. Action  
+2. Adventure  
+3. Animation  
+4. Children's  
+5. Comedy  
+6. Crime  
+7. Documentary  
+8. Drama  
+9. Fantasy  
+11. Horror  
+12. Musical  
+13. Mystery  
+14. Romance  
+15. Sci-Fi  
+16. Thriller  
+17. War  
+18. Western  
+19. (no genres listed)
+
+## genome-tags.csv
+Таблица genome-tags.csv содержит tag genome – структуру данных, которая описывает релевантность тегов по отношению к фильму. Заданы 1128 тэгов, и по каждому фильму указаны значения релевантности для каждого тега. Tag genome был рассчитан с помощью алгоритма на основе пользовательского контента, включая теги, рейтинги и текстовые описания. Таблица содержит описания тегов.
+### Формат данных:
+tagId,tag  
+2,007 (series)  
+4,1920s  
+11,3d  
+22,adapted from:book  
+...
+
+### Описание полей:
+● tagId – идентификатор тега, значения сгенерированы в тот момент, когда экспортировался весь набор данных, так что могут быть не такими, как в других версиях датасетов от MovieLens (например, 1М и 20M).;  
+● tag – название тега.  
+
+## genome-scores.csv
+Таблица genome-scores.csv содержит релевантность тегов по отношению к фильмам.
+### Формат данных:
+movieId,tagId,relevance  
+1,3,0.0625  
+1,5,0.14075  
+1,8,0.20375  
+...  
+
+### Описание полей:
+● movieId – идентификатор фильма;  
+● tagId – идентификатор тега;  
+● relevance – релевантность тега фильму.  
 
 ## Practical
 Скачаем в Google Colab архив с данными:  
@@ -56,3 +120,13 @@ tag_counts[:10].sort_values().plot(kind='barh', figsize=(8, 4), colormap='Accent
 ```
 <img width="795" height="351" alt="image" src="https://github.com/user-attachments/assets/df53d3d1-1b3c-40d3-be7a-0cee4e1e8c9f" />
 Загрузим данные о рейтингах
+```py
+import numpy as np
+
+rating = pd.read_csv('ml-25m/ratings.csv')
+rating.sample(3)
+
+rating["rating"].plot(kind='hist', figsize=(8, 4), colormap='Paired', 
+                      xticks=np.arange(0.5, 5.5, 0.5));
+```
+<img width="678" height="366" alt="image" src="https://github.com/user-attachments/assets/4a4d6c8a-45fb-49bf-a72d-75040a0e56e1" />
