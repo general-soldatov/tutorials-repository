@@ -218,7 +218,30 @@ new_data.sample(10)
 ```
 <img width="830" height="524" alt="image" src="https://github.com/user-attachments/assets/5049e490-6916-4504-8c30-c00bf39fe20f" />
 
-```math
-a^x + b^y = c^z
+Получим список фильма пользователя по его ID:
+```py
+user_group = new_data.groupby(['userId'])
 ```
-$` a^2 + b^2 = c^2`$
+Найдём фильмы трёх пользователей, оценивших больше всего фильмов в выборке:
+```py
+sorted_users_group = sorted(user_group, key=lambda x: len(x[1]), reverse=True)
+```
+Найдём ID пользователя, у которого больше всего похожих фильмов:
+```py
+similar_movies_user = sorted_users_group[1][0]
+# скорее всего в sorted_users_group[0][0] будет сам пользователь
+person2 = user_group.get_group(similar_movies_user).sort_values(by='movieId')
+```
+Получим список одинаковых фильмов для двух пользователей с оценками
+``py
+temp = user_movies[user_movies['movieId'].isin(user_group.get_group(similar_movies_user)['movieId'])]
+person1 = temp.sort_values(by='movieId')
+person1.head()
+```
+Далее посчитаем коэффициент корреляции Пирсона для этих двух пользователей.
+```py
+from scipy.stats import pearsonr
+pearsonr(person1.rating, person2.rating)[0] #0.36139189423020873
+```
+Нужно пройтись по всем пользователям и отсортировать их по похожести и оставить k самых похожих. Далее в коде приведены примеры расчетов для случайных пользователей. Их нужно заменить своими.
+```py
