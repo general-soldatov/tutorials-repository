@@ -221,3 +221,4 @@ new_data.sample(10)
 ```math
 a^x + b^y = c^z
 ```
+$` a^2 + b^2 = c^2`$
