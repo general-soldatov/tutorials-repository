@@ -15,7 +15,8 @@ TensorFlow — это фреймворк машинного обучения с 
 ## Practical
 Прежде чем начать, убедитесь, что в вашей системе установлены TensorFlow , scikit-learn и pandas . Вы можете установить их с помощью pip: 
 ```bash
-!pip install tensorflow 
+!pip install tensorflow==2.15
+!pip install keras
 !pip install scikit-learn 
 !pip install pandas
 ```
@@ -26,39 +27,74 @@ import pandas as pd
 ```
 Далее загрузим набор данных iris в pandas DataFrame:
 ```py
-iris_data = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data', header=None)
-iris_data.columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'species']
+from sklearn.datasets import load_iris
+
+iris = load_iris()
+iris_data = pd.DataFrame(data=iris.data)
+iris_data.columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
+iris_data['species'] = iris.target
 ```
 Набор данных по ирисам содержит 150 образцов, по 50 образцов для каждого из трёх видов. Мы можем разделить набор данных на обучающий и тестовый с помощью функции train_test_split из библиотеки scikit-learn:
 ```py
+from sklearn.model_selection import train_test_split
 
+train_data, test_data, train_labels, test_labels = train_test_split(
+    iris_data[['sepal_length', 'sepal_width', 'petal_length', 'petal_width']],
+    iris_data['species'], test_size=0.2
+)
 ```
 Теперь мы разделили набор данных на обучающий и тестовый наборы.  
 Давайте определим столбцы признаков с помощью API tf.feature_column. Столбцы признаков используются для преобразования необработанных входных данных в формат, подходящий для использования в модели TensorFlow. В данном случае мы определим четыре столбца признаков для четырёх входных признаков в наборе данных iris:
 ```py
-
+feature_columns = [
+    tf.feature_column.numeric_column('sepal_length'),
+    tf.feature_column.numeric_column('sepal_width'),
+    tf.feature_column.numeric_column('petal_length'),
+    tf.feature_column.numeric_column('petal_width')
+]
 ```
 Далее создадим объект Estimator, используя класс DNNClassifier . Это позволит нам создать глубокую нейронную сеть, которая сможет классифицировать цветы ириса на основе входных признаков:
 ```py
-
+estimator = tf.estimator.DNNClassifier(
+    feature_columns=feature_columns,
+    hidden_units=[10, 10],
+    n_classes=3,
+    model_dir='model'
+)
 ```
 В данном случае мы создаём нейронную сеть с двумя скрытыми слоями, по 10 узлов в каждом. Параметр n_classes равен 3, поскольку в наборе данных iris существует три возможных класса. Параметр model_dir указывает каталог, в котором будет сохранена модель TensorFlow.  
 Теперь определим входные функции, которые будут передавать данные в Estimator. Мы определим две входные функции: одну для обучающих данных и одну для тестовых:
 ```py
+train_input_fn = tf.compat.v1.estimator.inputs.pandas_input_fn(
+    x=train_data,
+    y=train_labels,
+    batch_size=32,
+    shuffle=True
+)
 
+test_input_fn = tf.compat.v1.estimator.inputs.pandas_input_fn(
+    x=test_data,
+    y=test_labels,
+    batch_size=32,
+    shuffle=False
+)
 ```
 Функция pandas_input_fn используется для создания входных функций из фреймов данных Pandas. Параметр batch_size определяет количество выборок, которые будут переданы модели одновременно. Параметр shuffle устанавливается в значение True для обучающей входной функции, которая перемешивает обучающие данные перед их передачей модели.  
 Теперь, когда мы определили оценщик и входные функции, мы можем обучить модель, используя метод train:  
 ```py
-
+estimator.train(input_fn=train_input_fn, steps=1000)
 ```
 Метод train обучает модель, используя указанную входную функцию для указанного количества шагов.  
 Наконец, мы можем оценить эффективность модели на тестовых данных, используя метод оценки :
 ```py
-
+eval_result = estimator.evaluate(input_fn=test_input_fn)
+eval_result
 ```
 Выход :
 ```bash
-
+{'accuracy': 0.3,
+ 'average_loss': 1.7329919,
+ 'loss': 1.7329919,
+ 'global_step': 4}
 ```
 Метод estimate возвращает словарь, содержащий различные метрики производительности, такие как точность и потери. Мы можем распечатать результаты оценки, чтобы увидеть, насколько хорошо наша модель работает на тестовых данных.
