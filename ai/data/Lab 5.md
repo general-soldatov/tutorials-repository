@@ -89,9 +89,45 @@ y = torch.autograd.Variable(torch.FloatTensor(y))
 ```
 Код обучения одного нейрона на PyTorch:
 ```py
+# квадратичная функция потерь (можно сделать свою)
+loss_fn = torch.nn.MSELoss(size_average=False)
 
+# шаг градиентного спуска (точнее -- метода оптимизации)
+learning_rate = 0.001 # == 1е-3
+# сам метод оптимизации нейросети (обычно лучше всего по умолчанию работает Adam)
+optimizer = torch.optim.SGD(neuron.parameters(), lr=learning_rate)
+
+# итерируемся num_epochs раз, здесь 500
+for t in range(500):
+    # foward_pass() -- применение нейросети (этот шаг ещё называют inference)
+    y_pred = neuron(X)
+
+    # выведем Loss
+    loss = loss_fn(y_pred, y)
+    print(t, loss.data)
+
+    # ВСЕГДА обнуляйте градиенты перед backard_pass`ом
+    # подробнее: читайте документацию PyTorch
+    optimizer.zero_grad()
+    # backward_pass() -- вычисляем градиенты Loss`а по параметрам (весам) нейросети
+    # ВНИМАНИЕ! На этом шаге мы только вычисляем градиенты, но ещё не обновляем веса
+    loss.backward()
+
+    # А вот здесь уже обновляем
+    optimizer.step()
 ```
 После обучения можно выполнить предсказание:
 ```py
+proba_pred = neuron(X)
+y_pred = proba_pred > 0.5
+y_pred = y_pred.data.numpy().reshape(-1)
 
+plt.figure(figsize=(10, 8))
+plt.scatter(data['yellowness'], data['symmetry'], c=y_pred, cmap='spring')
+plt.title('Apples & Pears', fontsize=15)
+plt.xlabel('symmetry', fontsize=14)
+plt.ylabel('yellowness', fontsize=14)
+plt.show();
 ```
+<img width="851" height="708" alt="image" src="https://github.com/user-attachments/assets/62ece860-0242-417d-ac2e-065ed5c21279" />
+
