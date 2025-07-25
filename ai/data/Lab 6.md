@@ -95,3 +95,71 @@ y = torch.autograd.Variable(torch.LongTensor(y.astype(np.int64)))
 X.data.shape, y.data.shape
 ```
 Процесс обучения MLP:
+```py
+# N - размер батча (batch_size, нужно для метода оптимизации)
+# D_in - размерность входа (количество признаков у объекта)
+# H - размерность скрытых слоёв
+# D_out - размерность выходного слоя (суть - количество классов)
+N, D_in, H, D_out = 64, 2, 100, 3
+
+# Use the nn package to define our model and Loss function
+two_layer_net = torch.nn.Sequential(
+    torch.nn.Linear(D_in, H),
+    torch.nn.ReLU(),
+    torch.nn.Linear(H, D_out),
+)
+
+loss_fn = torch.nn.CrossEntropyLoss(size_average=False)
+
+learning_rate = 1e-4
+optimizer = torch.optim.SGD(two_layer_net.parameters(), lr=learning_rate)
+
+for t in range(500):
+    # forward
+    y_pred = two_layer_net(X)
+
+    # Loss
+    loss = loss_fn(y_pred, y)
+    print(t, loss.data)
+    optimizer.zero_grad()
+
+    # backward
+    loss.backward()
+
+    # UPDATE!
+    optimizer.step()
+```
+Несмотря на то, что это задача 3-х классовой классификации и столбец 𝑦 нужно по-хорошему кодировать посредством OneHotEncoding, в данном случае использовали просто столбец из 0, 1 и 2 и всё отработало. Вывод – PyTorch сам делает OneHot в таком случае.  
+Проверяем, насколько хороша наша сеть из 100 нейронов:
+```py
+X = X.data.numpy()
+y = y.data.numpy()
+h = 0.02
+x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+
+xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                     np.arange(y_min, y_max, h))
+grid_tensor = torch.FloatTensor(np.c_[xx.ravel(), yy.ravel()])
+
+Z = two_layer_net(torch.autograd.Variable(grid_tensor))
+Z = Z.data.numpy()
+Z = np.argmax(Z, axis=1)
+Z = Z.reshape(xx.shape)
+
+plt.figure(figsize=(10, 8))
+plt.contourf(xx, yy, Z, cmap=plt.cm.rainbow, alpha=0.3)
+plt.scatter(X[:, 0], X[:, 1], c=y, s=40, cmap=plt.cm.rainbow)
+
+plt.xlim(xx.min(), xx.max())
+plt.ylim(yy.min(), yy.max())
+
+plt.title('Diabloe`s toys', fontsize=15)
+plt.xlabel('$x$', fontsize=14)
+plt.ylabel('$y$', fontsize=14)
+plt.show();
+```
+Результат классификации с использованием MLP:
+
+<img width="862" height="709" alt="image" src="https://github.com/user-attachments/assets/e787ddf2-680b-4b1e-bca8-8d9caec845a1" />
+
