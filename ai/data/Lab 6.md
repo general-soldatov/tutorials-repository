@@ -70,3 +70,28 @@ Backpropagation работает корректно благодаря chain rul
 Требуется спроектировать и обучить нейронную сеть на основе архитектуры MLP для решения задачи классификации на наборе данных «игрушка дьявола».  
 Пример реализации нейронной сети на языке Pyhon: 
 ```py
+import matplotlib.pyplot as plt
+import numpy as np
+
+import torch
+
+N = 100
+D = 2
+K = 3
+X = np.zeros((N * K, D))
+y = np.zeros(N * K, dtype='uint8')
+
+for j in range(K):
+    ix = range(N * j, N * (j + 1))
+    r = np.linspace(0.0, 1, N)
+    t = np.linspace(j * 4, (j + 1) * 4, N) + np.random.randn(N) * 0.2 # theta
+    X[ix] = np.c_[r * np.sin(t), r * np.cos(t)]
+    y[ix] = j
+```
+Считаем градиенты:
+```py
+X = torch.autograd.Variable(torch.FloatTensor(X))
+y = torch.autograd.Variable(torch.LongTensor(y.astype(np.int64)))
+X.data.shape, y.data.shape
+```
+Процесс обучения MLP:
