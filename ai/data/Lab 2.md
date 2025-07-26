@@ -137,7 +137,9 @@ tag_counts = tag['tag'].value_counts()
 tag_counts[:10].sort_values().plot(kind='barh', figsize=(8, 4), colormap='Accent');
 ```
 <img width="795" height="351" alt="image" src="https://github.com/user-attachments/assets/df53d3d1-1b3c-40d3-be7a-0cee4e1e8c9f" />
-Загрузим данные о рейтингах
+  
+Загрузим данные о рейтингах  
+
 ```py
 import numpy as np
 
@@ -147,6 +149,7 @@ rating.sample(3)
 rating["rating"].plot(kind='hist', figsize=(8, 4), colormap='Paired', 
                       xticks=np.arange(0.5, 5.5, 0.5));
 ```
+
 <img width="678" height="366" alt="image" src="https://github.com/user-attachments/assets/4a4d6c8a-45fb-49bf-a72d-75040a0e56e1" />
 Загрузим данные о фильмах и tag genome
 ```py
