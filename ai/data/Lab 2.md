@@ -242,7 +242,7 @@ similar_movies_user = sorted_users_group[1][0]
 person2 = user_group.get_group(similar_movies_user).sort_values(by='movieId')
 ```
 Получим список одинаковых фильмов для двух пользователей с оценками
-``py
+```py
 temp = user_movies[user_movies['movieId'].isin(user_group.get_group(similar_movies_user)['movieId'])]
 person1 = temp.sort_values(by='movieId')
 person1.head()
