@@ -46,3 +46,199 @@ plt.imshow(image_jpg)
 Аналогично и с чёрно-белыми изображениями – это просто матрица с одним каналом (то есть пксель – это просто число), например, 28 на 28, каждое число которой от 0 до 255 характеризует яркость пикселя (насыщенность белым). Например, 255 – это полностью белый пиксель, 0 – полностью чёрный.  
 
 ## Practical
+Необходимо реализовать MLP-классификатор на основе выборки Fashion MNIST. Для этого будем работать с картинками одежды (чёрно-белыми, то есть цветовых каналов не 3, а 1). По входной картинке нужно предсказать тип одежды. Давайте посмотрим, что представляет собой датасет Fashion MNIST:
+```bash
+!curl -L -o fashionmnist.zip\
+  https://www.kaggle.com/api/v1/datasets/download/zalando-research/fashionmnist
+!unzip fashionmnist.zip
+```
+```py
+import pandas as pd
+
+TRAIN_PATH = "fashion-mnist_train.csv"
+TEST_PATH = "fashion-mnist_test.csv"
+
+train_df = pd.read_csv(TRAIN_PATH)
+test_df = pd.read_csv(TEST_PATH)
+test_df
+```
+Проанализируем размеры обучающей и тестовой выборок:
+```py
+train_df.shape, test_df.shape
+```
+Каждая строчка соответствует одной картинке, а столбцы – это значения в пикселях этой кратинки. Первый столбец в train_df говорит о типе (классе) одежды (от 0 до 9).  
+Самый первый столбец – label. Каждая картинка имеет класс от 0 до 9, расшифровка меток класса:
+
+<img width="180" height="316" alt="image" src="https://github.com/user-attachments/assets/6343a805-d8fa-4f2a-b93b-461f05b08d1d" />
+
+Итак, мы имеем 60000 картинок, у каждой известна метка класса (то есть что это за одежда). Отделим X (признаковое описание объектов) и y (метки классов):
+```py
+X_train = train_df.values[:, 1:]
+y_train = train_df.values[:, 0]
+
+X_test = test_df.values[:, 1:] # удаляем столбец 'label'
+X_train.shape, y_train.shape
+```
+Следует обратить внимание, что изображения хранятся в строках текстового файла. На самом деле 784 пикселя – это 28*28, то есть это «развёрнутая в строку» чёрно-белая картинка 28 на 28 пикселей. Давайте убедимся в этом, отрисовав несколько (можете менять индекс и смотрть на отрисовку):
+```py
+import matplotlib.pyplot as plt
+plt.imshow(X_train[0].reshape(28, 28), cmap='gray');
+```
+<img width="416" height="413" alt="image" src="https://github.com/user-attachments/assets/f5fdd3ec-92a0-4b82-a9cd-8dee0197afcb" />
+
+Это изображение, относящееся к классу «пулловер». Просто если мы будем использовать изображения большего разрешения, нам понадобятся большие вычислительные мощности, поэтому пока что будем довольствоваться такими размерами. Мы убедились в том, что имеем 60000 картинок с метками для обучения, картинки «развёрнуты» в строку. Зачем разворачивать в строку? Потому что каждый пиксель в данном случае – это один признак, то есть всего 784 признака, и уже их мы будем взвешивать нашей нейросетью, то есть у одного нейрона на входном слое будет 784 веса (+ Bias, то есть 785 весов), на каждый пиксель по весу, и дальше уже будут второй слой, третий слой и так далее…  
+Реализуем нейронную сеть на PyTorch. Сначала обернём данные в тензоры пайторча (может занять некоторое время):
+```py
+import torch
+import numpy as np
+
+X_train_tensor = torch.FloatTensor(X_train)
+y_train_tensor = torch.FloatTensor(y_train.astype(np.int64))
+X_train_tensor.shape, y_train_tensor.shape
+```
+```py
+y_train_tensor.unique()
+```
+Нельзя непосредственно использовать LogLoss (основная функция потерь для задачи классификации). Необходимо преобразовать метки классов из целых чисел в OneHot-кодированные метки:  
+```py
+length = y_train_tensor.shape[0]
+num_classes = 10 # количество классов, в нашем случае 10 типов одежды
+
+# закодированные OneHot-ом метки классов
+y_onehot = torch.FloatTensor(length, num_classes)
+
+y_onehot.zero_()
+y_onehot.scatter_(1, y_train_tensor.view(-1, 1), 1)
+
+y_train_tensor, y_onehot
+```
+Видим, что метки перешли в вид «единица там, где номер класса, а остальные нули». Возьмём два слоя – входной и один скрытый (выходной обычно не считают, но он тоже есть):
+```py
+# D_in - размерность входа (количество признаков у объекта)
+# H - размерность скрытых слоёв
+# D_out - размерность выходного слоя (суть - количество классов)
+D_in, H, D_out = 784, 100, 10
+
+# определим нейросеть
+net = torch.nn.Sequential(
+    torch.nn.Linear(D_in, H),
+    torch.nn.ReLU(),
+    torch.nn.Linear(H, D_out),
+    torch.nn.Softmax()
+)
+```
+Следует обратить внимание:  
+D_in – это входная размерность (784 признака-пикселя);  
+D_out – выходная размерность (10 классов-типов одежды), то есть 10 нейронов на выходном слое;  
+H – количество нейронов в скрытом слое.  
+Осталось выбрать Loss (функцию потерь) и метод оптимизации, с помощью которого мы будем считать градиенты и обновлять с помощью них обновлять веса. Loss мы выберем CrossEntropy, то есть кросс-энтропию, этот лосс почти всегда используется в задаче многоклассовой классификации, а метод оптимизации выберем обычный SGD (Stochastic Gradient Descent, стохастический градиентный спуск).  
+Однако перед тем, как перейти к коду обучения нейросети, есть одна тонкость – батчи, а точнее мини-батчи.  
+Мини-батчи – это небольшие (обычно размера 16, 32 или 64) «фрагменты» выборки, то есть мини-батч размера 64 – это 64 объекта из датасета. Обычно мини-батч называют просто батч (batch).  
+Методы оптимиазции по типу стохастического градиентного спуска часто считаются не под одному объекту (в этом случае оптимизация будет очень нестабильная, «шумная»), а по нескольким – по батчу. То есть в обычном градиентном спуске будет сумма по всей выборке, в стохастическом (чистом варианте) – по одному объекту, а «между ними» - мини-батч SGD, то есть подсчёт градиентов на небольшом кусочке данных.  
+Одна итерация (iteration) алгоритма оптимизации – это проход по одному батчу. Одна эпоха (epoch) алгоритма оптимизации – это проход по всей выборке. То есть, например, если выборка размера 60000, а батч размера 64, то одна эпоха занимает 60000 / 64 = 937,5 = 938 итераций.  
+Напишем функцию, генерирующую батчи:
+```py
+def generate_batches(X, y, batch_size=64):
+    for i in range(0, X.shape[0], batch_size):
+        X_batch, y_batch = X[i:i+batch_size], y[i:i+batch_size]
+        yield X_batch, y_batch
+```
+Код обучения нейросети (обязательно убедитесь, что понимаете, что делает каждая строчка – это необходимо для ваших дальнейших экспериментов):
+```py
+BATCH_SIZE = 64
+NUM_EPOCHS = 100
+
+loss_fn = torch.nn.CrossEntropyLoss(size_average=False)
+
+learning_rate = 1e-4
+optimizer = torch.optim.SGD(net.parameters(), lr=learning_rate)
+
+for epoch_num in range(NUM_EPOCHS):
+    iter_num = 0
+    running_loss = 0.0
+    for X_batch, y_batch in generate_batches(X_train_tensor, y_train_tensor, BATCH_SIZE):
+        # forward (подсчёт ответа с текущиим весами)
+        y_pred = net(X_batch)
+
+        # вычисляем Loss`ы
+        loss = loss_fn(y_pred, y_batch)
+
+        running_loss += loss.item()
+
+        if iter_num % 100 == 99:
+          print('[{}, {}] current loss: {}'.format(epoch_num, iter_num + 1, running_loss / 2000))
+          running_loss = 0.0
+        
+        # зануляем градиенты
+        optimizer.zero_grad()
+
+        # backward (подсчёт новых градиентов)
+        loss.backward()
+
+        # обновляем веса
+        optimizer.step()
+
+        iter_num += 1
+```
+мы получили обученную нейросеть. Давайте измерим качество на обучающей выбоорке:
+```py
+class_correct = list(0. for i in range(10))
+class_total = list(0. for i in range(10))
+
+classes = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 
+           'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+
+with torch.no_grad():
+    for X_batch, y_batch in generate_batches(X_train_tensor, y_train_tensor, BATCH_SIZE):
+        y_pred = net(X_batch)
+        _, predicted = torch.max(y_pred, 1)
+        c = (predicted == y_batch).squeeze()
+        for i in range(len(y_pred)):
+            label = y_batch[i]
+            class_correct[label] += c[i].item()
+            class_total[label] += 1
+
+for i in range(10):
+    print('Accuracy of %5s : %2d %%' % (
+        classes[i], 100 * class_correct[i] / class_total[i]))
+```
+Ответ:
+```
+Accuracy of T-shirt/top : 78 %
+Accuracy of Trouser :  0 %
+Accuracy of Pullover : 76 %
+Accuracy of Dress : 95 %
+Accuracy of  Coat : 62 %
+Accuracy of Sandal : 98 %
+Accuracy of Shirt : 64 %
+Accuracy of Sneaker : 99 %
+Accuracy of   Bag : 96 %
+Accuracy of Ankle boot :  0 %
+```
+Очевидно, что сеть далеко не идеально решает задачу классификации – она предсказывает только 8 классов, а про некоторые просто «забывает». Теперь предскажем на тестовой и сохраним предсказания в файл. Это ни  что иное, как baseline, который вам необходимо превзойти.  
+```py
+y_test_pred = net(torch.FloatTensor(X_test))
+print(y_test_pred.shape)
+y_test_pred[:5]
+```
+Преобразуем OneHot'ы в числовые метки:
+```py
+_, predicted = torch.max(y_test_pred, 1)
+
+predicted
+```
+Сохраним в датафрейм:
+```py
+answer_df = pd.DataFrame(data=predicted.numpy(), columns=['Category'])
+answer_df.head()
+```
+```py
+answer_df['Id'] = answer_df.index
+answer_df.head()
+
+answer_df.tail()
+```
+Сохранение результатов в файл:
+```py
+answer_df.to_csv('baseline.csv', index=False)
+```
