@@ -247,7 +247,7 @@ temp = user_movies[user_movies['movieId'].isin(user_group.get_group(similar_movi
 person1 = temp.sort_values(by='movieId')
 person1.head()
 ```
-Далее посчитаем коэффициент корреляции Пирсона для этих двух пользователей.
+Далее посчитаем коэффициент корреляции Пирсона для этих двух пользователей.  
 ```py
 from scipy.stats import pearsonr
 pearsonr(person1.rating, person2.rating)[0] #0.36139189423020873
