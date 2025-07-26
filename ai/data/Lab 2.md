@@ -173,8 +173,10 @@ number_rating = data.groupby('title')['rating'].count().rename(
     "rated_by_users").reset_index()
 number_rating.sample(5)
 ```
+
 <img width="586" height="292" alt="image" src="https://github.com/user-attachments/assets/2c01e94d-686d-4623-b2bd-bbc50bad80c9" />
 
+  
 Поскольку обработка всей таблицы с рейтингами фильмов от пользователей перегружает RAM, то для примера возьмём случайные 10К строк из неё и составим сводную таблицу рейтингов, которые каждый пользователь ставил каждому фильму:
 ```py
 data_train = data.sample(10000)
@@ -183,6 +185,7 @@ movie_pivot = data_train.pivot_table(index=['userId'],
                                      values="rating")
 movie_pivot.head().T
 ```
+
 <img width="686" height="628" alt="image" src="https://github.com/user-attachments/assets/2cc6d949-7bd9-47cd-a25e-0d12605df60d" />
 
 Матрица предпочтений, полученная с помощью кода выше, состоит практически из одних нулей. В такой матрице маловероятно найти хоть что-то. Например, поищем похожий фильм.
