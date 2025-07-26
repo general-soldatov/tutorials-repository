@@ -151,7 +151,9 @@ rating["rating"].plot(kind='hist', figsize=(8, 4), colormap='Paired',
 ```
 
 <img width="678" height="366" alt="image" src="https://github.com/user-attachments/assets/4a4d6c8a-45fb-49bf-a72d-75040a0e56e1" />
-Загрузим данные о фильмах и tag genome
+
+
+Загрузим данные о фильмах и tag genome  
 ```py
 movies = pd.read_csv('ml-25m/movies.csv')
 genome_scores = pd.read_csv('ml-25m/genome-scores.csv')
@@ -162,12 +164,13 @@ top5_dragon_genom = genome_scores.query("tagId == 321").nlargest(5, "relevance")
 movies[movies.movieId.isin(top5_dragon_genom.movieId)]
 ```
 <img width="1071" height="301" alt="image" src="https://github.com/user-attachments/assets/4ad51fa8-366d-4d8d-ba09-74b0f3e40061" />
-
+  
 Объединим таблицы с описаниями фильмов и их рейтингами в одну
 ```py
 data = pd.merge(movies, rating)
 data.sample(5)
 ```
+
 <img width="1477" height="301" alt="image" src="https://github.com/user-attachments/assets/1f37a5a8-54d0-4fc3-bd5b-105d0edfc58b" />
 
 В таблицу number_rating будем хранить общее количество оценок фильму
