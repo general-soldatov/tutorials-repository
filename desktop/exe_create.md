@@ -5,3 +5,4 @@
 Опционально: создаём один файл - ``pyinstaller --onefile your_script.py``  
 Опционально: скрываем дополнительно консоль - ``pyinstaller --onefile --noconsole your_script.py`` 
 
+<img width="3840" height="1080" alt="image" src="https://github.com/user-attachments/assets/5723cc96-9445-4326-ac3d-be8cab2a7c32" />
